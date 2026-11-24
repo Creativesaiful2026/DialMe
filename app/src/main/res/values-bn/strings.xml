@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DialMe</string>
+    <string name="app_tagline">আপনার ডায়ালার। আপনার স্টাইল।</string>
+
+    <string name="nav_favorites">প্রিয়</string>
+    <string name="nav_contacts">কন্টাক্ট</string>
+    <string name="nav_recents">সাম্প্রতিক</string>
+    <string name="nav_dialpad">ডায়ালপ্যাড</string>
+    <string name="nav_settings">সেটিংস</string>
+
+    <string name="placeholder_not_built">এখনো তৈরি হয়নি। Phase %1$d-এ আসবে।</string>
+
+    <string name="settings_title">সেটিংস</string>
+    <string name="settings_section_appearance">চেহারা</string>
+    <string name="settings_theme_mode">থিম মোড</string>
+    <string name="theme_mode_system">সিস্টেম অনুযায়ী</string>
+    <string name="theme_mode_light">লাইট</string>
+    <string name="theme_mode_dark">ডার্ক</string>
+    <string name="theme_mode_amoled">AMOLED কালো</string>
+    <string name="settings_dynamic_color">ডাইনামিক রঙ</string>
+    <string name="settings_dynamic_color_hint">Android 12 বা নতুন সংস্করণ লাগে</string>
+    <string name="settings_accent_color">অ্যাকসেন্ট রঙ (ডাইনামিক রঙ বন্ধ থাকলে ব্যবহার হয়)</string>
+    <string name="settings_corner_radius">কোণের গোলাকার ভাব</string>
+    <string name="settings_preview_card">এই কার্ড আপনার বেছে নেওয়া কোণের মাপ অনুসরণ করে।</string>
+    <string name="settings_reset_theme">ডিফল্টে ফেরান</string>
+    <string name="settings_not_saved">এই সেটিং শুধু অ্যাপ খোলা থাকা পর্যন্ত থাকে। স্থায়ীভাবে সংরক্ষণ Phase 7-এ আসবে।</string>
+    <string name="settings_section_diagnostics">ডায়াগনস্টিক্স</string>
+    <string name="settings_open_log">অ্যাপের লগ দেখুন</string>
+    <string name="settings_section_about">সম্পর্কে</string>
+    <string name="settings_version">সংস্করণ %1$s (বিল্ড %2$d)</string>
+
+    <string name="diagnostics_title">অ্যাপের লগ</string>
+    <string name="diagnostics_back">পিছনে</string>
+    <string name="diagnostics_refresh">রিফ্রেশ</string>
+    <string name="diagnostics_share">শেয়ার</string>
+    <string name="diagnostics_clear">মুছুন</string>
+    <string name="diagnostics_empty">লগ খালি।</string>
+    <string name="diagnostics_share_subject">DialMe লগ</string>
+</resources>
