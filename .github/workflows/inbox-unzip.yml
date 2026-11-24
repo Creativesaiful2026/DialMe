@@ -1,0 +1,63 @@
+name: Inbox Unzip
+
+# Upload a file named inbox-*.zip to the repository root (GitHub web, "Add file > Upload files").
+# This workflow extracts it, commits the files, deletes the ZIP and starts the CI workflow.
+# Files under .github/ inside the ZIP are ignored on purpose: GitHub does not allow workflows
+# to modify workflow files. Those must be created by hand.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'inbox-*.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Extract ZIP files
+        run: |
+          shopt -s nullglob
+          zips=(inbox-*.zip)
+          if [ ${#zips[@]} -eq 0 ]; then
+            echo "No inbox-*.zip file found."
+            exit 0
+          fi
+          for z in "${zips[@]}"; do
+            echo "Extracting $z"
+            tmp="$(mktemp -d)"
+            unzip -q "$z" -d "$tmp"
+            entries=("$tmp"/*)
+            if [ ${#entries[@]} -eq 1 ] && [ -d "${entries[0]}" ]; then
+              src="${entries[0]}"
+            else
+              src="$tmp"
+            fi
+            rm -rf "$src/.github"
+            cp -a "$src"/. .
+            git rm -q "$z"
+          done
+          chmod +x gradlew || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Import project files from inbox ZIP"
+            git push
+          fi
+
+      - name: Start CI
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run ci.yml --ref main
