@@ -8,12 +8,12 @@
 
 - **Phase 0 (Planning): সম্পন্ন এবং অনুমোদিত।**
 - **Phase 1 (Foundation): বাস্তবে সফল।** CI #3 সবুজ ✓ (3m 2s), APK ইনস্টল হয়ে চলেছে, লগ ও share কাজ করেছে (2026-11-25)। বাকি যাচাই: `PROJECT_STATUS.md` ধারা ৫ক-এর C4 (বাংলা), C5 (Dark/AMOLED), C6 (restart)।
-- **Phase 1B (Telecom Spike): সোর্স লেখা হয়েছে (2026-11-25), কিন্তু একবারও build হয়নি এবং ফোনে পরীক্ষাও হয়নি।** ১৫টি পরীক্ষা (T1–T15) সবগুলো **Not Yet Tested**।
+- **Phase 1B (Telecom Spike): সোর্স আপলোড হয়েছে; CI Run 7 সফল, debug APK তৈরি (2026-11-25)।** CI Run 7 (commit `16d16e9`, push, 1m 7s) Success। Artifact: `DialMe-debug-7` (10.3 MB) ও `reports-7` (89.1 KB)। Run 6 (commit `f02a1f0`, ম্যানুয়াল) ব্যর্থ ছিল এবং শুধু `reports-6` ছিল। দুটি commit-এই Phase 1B-র সোর্স আছে (যাচাই: `:core:telecom`, `:feature:incall`, `TelecomSpikeScreen`)। `Upload debug APK` ধাপ চলেছে, তাই `Build debug APK` ও `Unit tests` ধাপ ব্যর্থ হয়নি (ধাপভিত্তিক log আমি দেখিনি)। `Android Lint` ধাপ এখনো ত্রুটি দেখাচ্ছে (annotation: 1 error, "Process completed with exit code 1"); `continue-on-error: true`-র কারণে run সবুজ। Lint-এর কারণ এখনো অজানা। প্রমাণের উৎস: GitHub-এর পাবলিক run পাতা (Claude নিজে দেখেছে)। APK Device A-তে ইনস্টল হয়েছে (স্ক্রিনশটে Telecom spike স্ক্রিন, 17:46)। T1 **PASS**; T3 **PASS** (মালিকের রিপোর্ট); T2, T5 আংশিক; বাকি সব **Not Yet Tested**। DialMe এখন Device A-র default Phone app।
 
 ## ২. মালিকের নির্দেশ (ক্রম মেনে)
 
 1. Foundation বাস্তবে build যাচাই, তারপর রিপোর্ট। **সম্পন্ন।**
-2. তারপর Phase 1B Telecom Spike। **কোড লেখা হয়েছে; এখন build যাচাই বাকি।**
+2. তারপর Phase 1B Telecom Spike। **কোড লেখা হয়েছে, CI Run 7 সফল ও APK তৈরি (প্রমাণ: run পাতা)। ডিভাইস পরীক্ষা বাকি।**
 3. কোনো পরীক্ষার ফল অনুমান করে Passed করা যাবে না।
 4. Phase 1B-র ফল ঘোষণার আগে ডিভাইস পরীক্ষা (Device A ও Device B) বাস্তবে হতে হবে।
 
@@ -23,6 +23,7 @@
 - Claude এই চ্যাটে compile বা Gradle চালাতে পারে না (Google ও Maven repository নাগালের বাইরে)। build-এর সত্যিকারের ফলাফল শুধু GitHub Actions log থেকে আসবে।
 - ZIP আপলোড পদ্ধতি: repository root-এ `inbox-*.zip`, তারপর `inbox-unzip.yml` workflow খুলে commit করে। ZIP-এর নাম `inbox-` দিয়ে শুরু হতে হবে। `.github/` ZIP-এ থাকে না; workflow ফাইল হাতে তৈরি করতে হয়।
 - নতুন ধাপের ZIP-এর নাম হবে `inbox-phaseX-বিবরণ.zip` ধাঁচের।
+- Repository: https://github.com/Creativesaiful2026/DialMe (পাবলিক)। Claude এই চ্যাট থেকে `github.com` ও `raw.githubusercontent.com` পড়তে পারে (সীমিত rate); ধাপের log ও artifact ডাউনলোডে লগইন লাগে, তাই সেগুলো মালিককে পাঠাতে হবে।
 
 ## ৪. Phase 1 Foundation-এ কী আছে
 
@@ -43,7 +44,7 @@ AndroidX ও Compose BOM-এর সংস্করণ প্রথম build-এ 
 - Device A (DialMe চলবে) ও Device B (সহায়ক): দুটিই Redmi Note 12, Android 14, Xiaomi HyperOS 2.0.5.0।
 - প্রতিটিতে ২টি সক্রিয় Physical SIM। eSIM নেই। নাম: A-SIM1, A-SIM2, B-SIM1, B-SIM2।
 - **ফোন নম্বর চাইবেন না এবং কোথাও লিখবেন না।**
-- Device A-র বর্তমান default Phone app-এর নাম শুধু Telecom Testing শুরুর আগে সংগ্রহ করবেন। এটি Phase 1-এর বাধা নয়।
+- Device A: মালিকের নিজের ফোন (নিশ্চিত)। ডিফল্ট কলের SIM: Always ask। আগের default Phone app: **Google Dialer** (T2 ধাপ ৬ ও T15-এ এটিতে ফিরতে হবে)। Spike স্ক্রিনে Full-screen call notifications = No; T6, T7, T10-এর প্রথম চক্র এভাবেই চলবে।
 - T5-এর চারটি Outgoing সমন্বয় (A-SIM1→B-SIM1, A-SIM1→B-SIM2, A-SIM2→B-SIM1, A-SIM2→B-SIM2) এবং T7-এর দুই SIM-এ Incoming পরীক্ষা অন্তর্ভুক্ত। সবগুলো Not Yet Tested।
 - HyperOS-এর Autostart, Battery, background pop-up, lock screen অনুমতি T11-এ বাস্তবে পরীক্ষা হবে। সেটিংয়ের নাম অনুমান করবেন না।
 
@@ -70,9 +71,10 @@ AndroidX ও Compose BOM-এর সংস্করণ প্রথম build-এ 
 - অনিশ্চিত: outgoing কলে activity খোলা, full-screen intent, HyperOS pop-up, SIM slot শনাক্ত, `CallAudioState` (deprecated)। এগুলো অনুমান নয়, পরীক্ষায় দেখতে হবে।
 - ডিফল্ট থিম ব্যবহার হয় in-call স্ক্রিনে। App-wide theme Phase 7-এ।
 
-## ৯. পরবর্তী কাজ
+## ৯. পরবর্তী কাজ (এই ক্রমে)
 
-1. মালিক `inbox-phase1b-telecom-spike.zip` আপলোড করবেন। CI-র ফল (সবুজ বা ব্যর্থ log) দেখুন।
-2. compile-ত্রুটি এলে পুরো log পড়ে মূল কারণ খুঁজুন। অনুমান করে অনেক ফাইল বদলাবেন না।
-3. Build সফল হলে মালিককে Phase 1B পরীক্ষা (T1–T15) পরিচালনা করান। প্রথমে Spike স্ক্রিনের অবস্থা ও SIM তালিকা।
-4. Device A কোন ফোন, এবং তার default Phone app কোনটি: Spike স্ক্রিনই দেখাবে। মালিক Device A নিশ্চিত করবেন।
+1. `.github/workflows/ci.yml` হাতে বসানো (REPLACE; ZIP দিয়ে হয় না)। এতে "Job summary" ধাপ আছে। পরের run-এর পাতায় Lint ত্রুটি, ব্যর্থ ধাপের মূল লাইন ও unit test সংখ্যা দেখা যাবে; Claude নিজে `github.com`-এর পাবলিক পাতা থেকে পড়বে। স্ক্রিপ্ট CI-তে এখনো চলেনি। নিশ্চিত না হওয়া পর্যন্ত Lint-এর কারণ **অজানা**।
+   - কোড পড়ে পাওয়া **অযাচাইকৃত** সূত্র (প্রমাণ নেই): (ক) `abortOnError = false` শুধু `:app`-এ আছে, `:core:telecom` ও `:feature:incall`-এ নেই; (খ) `SimAccountProvider`-এর `getActiveSubscriptionInfo` কল `catch (e: Exception)`-এর ভেতরে; (গ) `CallNotifier`-এ `nm.notify(...)`-এর আগে সরাসরি permission যাচাই নেই। কারণ নিশ্চিত হওয়ার আগে কোড বদলানো হবে না।
+2. Device B ছাড়া Device A-তে করা যায় (মালিক সুবিধামতো): C4–C6; T2 ধাপ ৩–৫; T11 ধাপ ১; T12। প্রতিটিতে যা দেখলেন ও শুনলেন তা লিখুন।
+3. Device B হাতে এলে একসাথে: T4, T5, T6–T10, T11-এর বাকি, T13। (মালিক জানিয়েছেন T4 এখন দেখবেন না, পরে একসাথে।)
+4. Phase 1B-র পরীক্ষা শেষ ও মালিক অনুমোদন না করা পর্যন্ত Phase 2 শুরু হবে না।

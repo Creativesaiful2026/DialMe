@@ -4,7 +4,42 @@
 
 ## [Unreleased]
 
-### 2026-11-25 — Phase 1B: Telecom Spike (সোর্স লেখা হয়েছে, Build Verified নয়)
+### 2026-11-25 — CI diagnostic `ci.yml` (বসানো বাকি)
+
+- Run 7-এর log লগইন ছাড়া পড়া যায় না (HTTP 404), তাই Lint ত্রুটির কারণ এখনো অজানা।
+- নতুন `ci.yml` তৈরি: Build, Unit tests ও Lint ধাপের output `build.log`, `tests.log`, `lint.log`-এ রাখে; Lint ধাপে `--continue` যোগ হয়েছে; নতুন "Job summary" ধাপ run-এর পাতায় Lint ত্রুটি, ব্যর্থ ধাপের মূল লাইন ও মডিউলভিত্তিক unit test সংখ্যা লেখে।
+- স্ক্রিপ্ট শুধু নকল lint ও test ডেটায় স্থানীয়ভাবে পরীক্ষিত। **CI-তে এখনো চলেনি**; অ্যাপের কোড বদলায়নি।
+- মালিক জানিয়েছেন Device B এখন হাতে নেই; T4 সহ B-নির্ভর পরীক্ষা পরে একসাথে হবে। অবস্থা Not Yet Tested।
+
+### 2026-11-25 — Phase 1B: T3 ও আগের default app
+
+- মালিক জানিয়েছেন T3 (Outgoing call, SIM বাছাই ছাড়া, ডিফল্ট কলের SIM = Always ask) পাশ করেছে। এটি মালিকের মৌখিক রিপোর্ট; ধাপভিত্তিক পর্যবেক্ষণ ও স্ক্রিনশট বা log সংযুক্ত নেই। অবস্থা: **PASS (মালিকের রিপোর্ট)**।
+- Device A-তে DialMe-র আগের default Phone app: **Google Dialer** (মালিক)। T2 ধাপ ৬ ও T15-এ এটিতে ফিরতে হবে।
+
+### 2026-11-25 — Phase 1B: Device A-তে প্রথম পর্যবেক্ষণ
+
+- মালিকের দুটি স্ক্রিনশট (17:46): Telecom spike (Phase 1B) স্ক্রিন খুলেছে। DialMe default Phone app = Yes; make calls, read SIM information, Notifications = Yes; Full-screen call notifications = **No**; SIM 1 ও SIM 2 তালিকায় আছে; কল বোতাম আছে।
+- T1: **PASS** (স্ক্রিনশট প্রমাণ)। T2, T3, T5: আংশিক, বাকি ধাপ Not Yet Tested।
+- মালিক নিশ্চিত করেছেন এই ফোনই Device A। ডিফল্ট কলের SIM: Always ask। মালিকের রিপোর্ট: নম্বর বসিয়ে কল দিলে কল যায় ও SIM 1/SIM 2 বেছে কল দেওয়া যায়।
+- জানা বাকি: Device A-র আগের default Phone app-এর নাম (T2 ধাপ ৬, T15)।
+- ছোট UI-পর্যবেক্ষণ: Spike স্ক্রিনে একটি label ও তার মান ("allowed" ও "No") ফাঁক ছাড়া লেগে আছে।
+
+### 2026-11-25 — CI Run 7: Phase 1B-র debug APK তৈরি
+
+- GitHub-এর পাবলিক run পাতা থেকে যাচাই (Claude): Run 7 (commit `16d16e9`, push, "Allow Android Lint step to continue on error") **Success**, 1m 7s। Artifact: `DialMe-debug-7` (10.3 MB), `reports-7` (89.1 KB)।
+- Run 6 (commit `f02a1f0`, ম্যানুয়াল) ব্যর্থ, শুধু `reports-6`। দুটি commit-এই `:core:telecom`, `:feature:incall` ও `TelecomSpikeScreen` আছে।
+- `main`-এর `ci.yml`-এ Lint ধাপে `continue-on-error: true` আছে (যাচাই করা হয়েছে)। Lint ধাপ এখনো 1 error দেখায়; কারণ অজানা, ত্রুটির লেখা দেখা যায়নি।
+- `Upload debug APK` ধাপ চলায় `Build debug APK` ও `Unit tests` ধাপ ব্যর্থ হয়নি। ধাপভিত্তিক log দেখা হয়নি।
+- আগের নোটের "শর্তসাপেক্ষ" অংশ নিষ্পত্তি হলো: স্ক্রিনশটের ব্যর্থ run Phase 1B-র commit-এরই ছিল।
+- ডিভাইস পরীক্ষা শুরু হয়নি; T1–T15 সব Not Yet Tested।
+
+### 2026-11-25 (সন্ধ্যা) — Phase 1B প্রথম CI ফল
+
+- মালিকের স্ক্রিনশট: `Build debug APK` ✓, `Unit tests` ✓, `Android Lint (report only)` ✗ (শুধু "Error:" দেখা গেছে), `Upload debug APK` বাদ পড়েছে।
+- ফলে Phase 1B-র APK এখনো ইনস্টল হয়নি; Settings-এ Telecom spike অনুপস্থিত (পুরোনো APK)।
+- সিদ্ধান্ত: lint ধাপ রিপোর্ট-মাত্র, তাই নতুন `ci.yml`-এ সেটিতে `continue-on-error: true` যোগ করা হলো (হাতে বসাতে হবে)।
+
+### 2026-11-25 — Phase 1B: Telecom Spike (সোর্স লেখা হয়েছে, CI-তে compile ও test সবুজ, APK বাকি)
 
 #### যোগ হয়েছে
 - `:core:telecom`: `DialMeInCallService`, `CallManager`, `CallPlacer` (SIM বেছে কল), `SimAccountProvider` (SIM তালিকা ও slot), `DialerRole`, `TelecomStatus`, `DialNumbers`, incoming/ongoing notification ও `CallActionReceiver`।
