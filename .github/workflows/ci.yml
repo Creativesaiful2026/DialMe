@@ -42,6 +42,7 @@ jobs:
         run: ./gradlew testDebugUnitTest --stacktrace
 
       - name: Android Lint (report only)
+        continue-on-error: true
         run: ./gradlew lintDebug --stacktrace
 
       - name: Upload debug APK
