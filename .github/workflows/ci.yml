@@ -36,14 +36,23 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        id: build
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --stacktrace 2>&1 | tee build.log
 
       - name: Unit tests
-        run: ./gradlew testDebugUnitTest --stacktrace
+        id: tests
+        run: |
+          set -o pipefail
+          ./gradlew testDebugUnitTest --stacktrace 2>&1 | tee tests.log
 
       - name: Android Lint (report only)
+        id: lint
         continue-on-error: true
-        run: ./gradlew lintDebug --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew lintDebug --continue --stacktrace 2>&1 | tee lint.log
 
       - name: Upload debug APK
         if: success()
@@ -62,5 +71,147 @@ jobs:
           path: |
             **/build/reports/**
             **/build/test-results/**
+            build.log
+            tests.log
+            lint.log
           if-no-files-found: ignore
           retention-days: 14
+
+      - name: Job summary (diagnostics for the run page)
+        if: always()
+        env:
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          TESTS_OUTCOME: ${{ steps.tests.outcome }}
+          LINT_OUTCOME: ${{ steps.lint.outcome }}
+        run: |
+          python3 - <<'PY'
+          import collections
+          import glob
+          import os
+          import re
+          import xml.etree.ElementTree as ET
+
+          out = []
+
+          def add(s=""):
+              out.append(s)
+
+          def read_lines(path):
+              try:
+                  with open(path, encoding="utf-8", errors="replace") as f:
+                      return f.read().splitlines()
+              except OSError:
+                  return []
+
+          PATTERN = re.compile(
+              r"^e: |> Task .* FAILED|Execution failed|What went wrong|Lint found|First failure|: Error:|: Fatal:|error:"
+          )
+
+          def excerpt(path, limit=60):
+              lines = read_lines(path)
+              picked = []
+              for i, line in enumerate(lines):
+                  if PATTERN.search(line):
+                      picked.append(line)
+                      if "What went wrong" in line:
+                          picked.extend(lines[i + 1:i + 7])
+              seen = set()
+              result = []
+              for line in picked:
+                  if line not in seen:
+                      seen.add(line)
+                      result.append(line[:400])
+              return result[:limit]
+
+          add("## CI diagnostic summary")
+          add("")
+          add("| Step | Outcome |")
+          add("|---|---|")
+          for label, key in (("Build debug APK", "BUILD"), ("Unit tests", "TESTS"), ("Android Lint", "LINT")):
+              add("| %s | %s |" % (label, os.environ.get(key + "_OUTCOME", "unknown")))
+          add("")
+
+          for label, key, log in (("Build debug APK", "BUILD", "build.log"),
+                                  ("Unit tests", "TESTS", "tests.log"),
+                                  ("Android Lint", "LINT", "lint.log")):
+              outcome = os.environ.get(key + "_OUTCOME", "")
+              if outcome == "failure":
+                  add("### %s: key lines from the log" % label)
+                  add("```")
+                  lines = excerpt(log)
+                  if not lines:
+                      lines = [l[:400] for l in read_lines(log)[-40:]]
+                  out.extend(lines)
+                  add("```")
+                  add("")
+
+          add("### Lint reports")
+          xmls = sorted(glob.glob("**/build/reports/lint-results-*.xml", recursive=True))
+          if not xmls:
+              add("No lint XML report found.")
+          for path in xmls:
+              try:
+                  root = ET.parse(path).getroot()
+              except Exception as exc:
+                  add("- `%s`: could not parse (%s)" % (path, exc))
+                  continue
+              issues = root.findall("issue")
+              counts = collections.Counter(i.get("severity", "?") for i in issues)
+              if counts:
+                  add("- `%s`: %s" % (path, ", ".join("%s=%d" % kv for kv in sorted(counts.items()))))
+              else:
+                  add("- `%s`: no issues" % path)
+              shown = 0
+              for issue in issues:
+                  if issue.get("severity") in ("Error", "Fatal") and shown < 40:
+                      loc = issue.find("location")
+                      where = ""
+                      if loc is not None:
+                          where = "%s:%s" % (loc.get("file", ""), loc.get("line", ""))
+                      add("  - [%s] `%s` %s (%s)" % (
+                          issue.get("severity"), issue.get("id"),
+                          (issue.get("message") or "")[:300].replace("\n", " "), where))
+                      shown += 1
+              warn = collections.Counter(i.get("id", "?") for i in issues if i.get("severity") == "Warning")
+              if warn:
+                  add("  - Warning ids: " + ", ".join("%s=%d" % kv for kv in warn.most_common(10)))
+          add("")
+
+          add("### Unit test results")
+          per_module = collections.OrderedDict()
+          failed = []
+          for path in sorted(glob.glob("**/build/test-results/**/*.xml", recursive=True)):
+              try:
+                  root = ET.parse(path).getroot()
+              except Exception:
+                  continue
+              module = path.split("/build/")[0]
+              m = per_module.setdefault(module, [0, 0, 0, 0])
+              m[0] += int(root.get("tests", 0))
+              m[1] += int(root.get("failures", 0))
+              m[2] += int(root.get("errors", 0))
+              m[3] += int(root.get("skipped", 0))
+              for case in root.findall("testcase"):
+                  if case.find("failure") is not None or case.find("error") is not None:
+                      failed.append("%s.%s" % (case.get("classname"), case.get("name")))
+          if not per_module:
+              add("No unit test result files found.")
+          else:
+              add("| Module | Tests | Failures | Errors | Skipped |")
+              add("|---|---|---|---|---|")
+              for module, m in per_module.items():
+                  add("| %s | %d | %d | %d | %d |" % (module, m[0], m[1], m[2], m[3]))
+              add("| **Total** | %d | %d | %d | %d |" % tuple(sum(m[k] for m in per_module.values()) for k in range(4)))
+          for name in failed[:30]:
+              add("- FAILED: `%s`" % name)
+
+          text = "\n".join(out)
+          if len(text) > 900000:
+              text = text[:900000] + "\n...(truncated)"
+          target = os.environ.get("GITHUB_STEP_SUMMARY")
+          if target:
+              with open(target, "a", encoding="utf-8") as f:
+                  f.write(text + "\n")
+          else:
+              print(text)
+          PY
