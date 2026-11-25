@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notif_channel_incoming_name">Incoming calls</string>
+    <string name="notif_channel_incoming_desc">Shows incoming calls over the lock screen and as a pop-up notification</string>
+    <string name="notif_channel_ongoing_name">Ongoing calls</string>
+    <string name="notif_incoming_call">Incoming call</string>
+    <string name="notif_ongoing_call">Ongoing call</string>
+    <string name="notif_action_answer">Answer</string>
+    <string name="notif_action_decline">Decline</string>
+    <string name="notif_action_hangup">Hang up</string>
+    <string name="notif_unknown_caller">Unknown number</string>
+</resources>

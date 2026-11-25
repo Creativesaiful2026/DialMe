@@ -37,4 +37,37 @@
     <string name="diagnostics_clear">মুছুন</string>
     <string name="diagnostics_empty">লগ খালি।</string>
     <string name="diagnostics_share_subject">DialMe লগ</string>
+    <string name="settings_open_telecom">Telecom spike (পরীক্ষা)</string>
+    <string name="settings_open_telecom_hint">Default Phone app, SIM তালিকা ও পরীক্ষামূলক কল</string>
+
+    <string name="telecom_title">Telecom spike (Phase 1B)</string>
+    <string name="telecom_safety_note">শুধু পরীক্ষার জন্য। আপনার আগের Phone app মুছবেন না। জরুরি নম্বরে কখনো পরীক্ষা করবেন না।</string>
+    <string name="telecom_section_status">অবস্থা</string>
+    <string name="telecom_default_dialer">DialMe এখন default Phone app</string>
+    <string name="telecom_current_default">বর্তমান default Phone app: %1$s</string>
+    <string name="telecom_perm_call_phone">অনুমতি: কল করা</string>
+    <string name="telecom_perm_phone_state">অনুমতি: SIM-এর তথ্য পড়া</string>
+    <string name="telecom_perm_notifications">নোটিফিকেশন চালু</string>
+    <string name="telecom_fullscreen">পূর্ণ স্ক্রিন কল নোটিফিকেশনের অনুমতি</string>
+    <string name="telecom_yes">হ্যাঁ</string>
+    <string name="telecom_no">না</string>
+    <string name="telecom_unknown">অজানা</string>
+    <string name="telecom_request_role">DialMe-কে default Phone app করুন</string>
+    <string name="telecom_request_permissions">অনুমতি দিন</string>
+    <string name="telecom_open_fullscreen_settings">পূর্ণ স্ক্রিন নোটিফিকেশনের সেটিং খুলুন</string>
+    <string name="telecom_role_unavailable">এই ফোনে default Phone app বদলানোর সুবিধা সিস্টেম দিচ্ছে না।</string>
+    <string name="telecom_role_hint">আগের অবস্থায় ফিরতে: Settings, Apps, Default apps, Phone app।</string>
+    <string name="telecom_section_sims">SIM</string>
+    <string name="telecom_no_sims">কোনো SIM পাওয়া যায়নি, অথবা SIM-এর তথ্য পড়ার অনুমতি নেই।</string>
+    <string name="telecom_sim_item">SIM %1$d: %2$s</string>
+    <string name="telecom_sim_item_unknown_slot">SIM: %1$s</string>
+    <string name="telecom_section_call">পরীক্ষামূলক কল</string>
+    <string name="telecom_number_label">নম্বর</string>
+    <string name="telecom_call_sim">SIM %1$d দিয়ে কল করুন</string>
+    <string name="telecom_call_account">%1$s দিয়ে কল করুন</string>
+    <string name="telecom_call_default">ডিফল্ট SIM দিয়ে কল করুন</string>
+    <string name="telecom_result_started">কলের অনুরোধ পাঠানো হয়েছে। কল স্ক্রিন খোলার কথা।</string>
+    <string name="telecom_result_invalid">এটি সঠিক নম্বর নয়।</string>
+    <string name="telecom_result_no_permission">কল করার অনুমতি নেই।</string>
+    <string name="telecom_result_error">কল শুরু করা যায়নি।</string>
 </resources>

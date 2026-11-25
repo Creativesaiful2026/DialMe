@@ -73,6 +73,8 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:telecom"))
+    implementation(project(":feature:incall"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

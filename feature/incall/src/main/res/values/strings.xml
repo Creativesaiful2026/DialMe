@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="incall_status_dialing">Calling…</string>
+    <string name="incall_status_connecting">Connecting…</string>
+    <string name="incall_status_ringing">Incoming call</string>
+    <string name="incall_status_active">Ongoing call</string>
+    <string name="incall_status_holding">On hold</string>
+    <string name="incall_status_ending">Ending…</string>
+    <string name="incall_status_unknown">Call</string>
+    <string name="incall_unknown_number">Unknown number</string>
+    <string name="incall_answer">Answer</string>
+    <string name="incall_decline">Decline</string>
+    <string name="incall_end">End call</string>
+    <string name="incall_mute">Mute</string>
+    <string name="incall_hold">Hold</string>
+    <string name="incall_route_earpiece">Earpiece</string>
+    <string name="incall_route_speaker">Speaker</string>
+    <string name="incall_route_wired">Wired headset</string>
+    <string name="incall_route_bluetooth">Bluetooth</string>
+    <string name="incall_sim_slot">SIM %1$d</string>
+    <string name="incall_other_calls">+%1$d more</string>
+</resources>

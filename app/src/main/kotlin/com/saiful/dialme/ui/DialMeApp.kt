@@ -7,6 +7,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,21 +19,31 @@ import androidx.navigation.compose.rememberNavController
 import com.saiful.dialme.R
 import com.saiful.dialme.core.model.theme.ThemeSpec
 import com.saiful.dialme.ui.navigation.ROUTE_DIAGNOSTICS
+import com.saiful.dialme.ui.navigation.ROUTE_TELECOM_SPIKE
 import com.saiful.dialme.ui.navigation.TopLevelDestination
 import com.saiful.dialme.ui.screens.DiagnosticsScreen
 import com.saiful.dialme.ui.screens.PlaceholderScreen
 import com.saiful.dialme.ui.screens.SettingsScreen
+import com.saiful.dialme.ui.screens.TelecomSpikeScreen
 
 @Composable
 fun DialMeApp(
     themeSpec: ThemeSpec,
     onThemeChange: ((ThemeSpec) -> ThemeSpec) -> Unit,
     onThemeReset: () -> Unit,
+    dialRequest: DialRequest?,
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = TopLevelDestination.entries.any { it.route == currentRoute }
+
+    // A tel: link or DIAL intent from another app opens the Telecom spike screen with the number.
+    LaunchedEffect(dialRequest) {
+        if (dialRequest != null) {
+            navController.navigate(ROUTE_TELECOM_SPIKE) { launchSingleTop = true }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -81,10 +92,17 @@ fun DialMeApp(
                     onThemeChange = onThemeChange,
                     onThemeReset = onThemeReset,
                     onOpenDiagnostics = { navController.navigate(ROUTE_DIAGNOSTICS) },
+                    onOpenTelecomSpike = { navController.navigate(ROUTE_TELECOM_SPIKE) },
                 )
             }
             composable(ROUTE_DIAGNOSTICS) {
                 DiagnosticsScreen(onBack = { navController.popBackStack() })
+            }
+            composable(ROUTE_TELECOM_SPIKE) {
+                TelecomSpikeScreen(
+                    initialNumber = dialRequest?.number,
+                    onBack = { navController.popBackStack() },
+                )
             }
         }
     }

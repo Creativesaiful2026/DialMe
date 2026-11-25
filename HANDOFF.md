@@ -1,21 +1,21 @@
 # DialMe — HANDOFF
 
-সর্বশেষ হালনাগাদ: 2026-11-23
+সর্বশেষ হালনাগাদ: 2026-11-25
 
 নতুন Claude কথোপকথনে কাজ চালিয়ে যাওয়ার আগে এই ফাইল এবং `PROJECT_STATUS.md` পুরো পড়ুন। আগের কাজ সম্পন্ন ধরে নেবেন না। repository-তে যা আছে তা যাচাই করুন।
 
 ## ১. এখন কোথায় আছি
 
-- **Phase 0 (Planning): সম্পন্ন এবং অনুমোদিত।** মালিক আটটি সিদ্ধান্ত অনুমোদন করেছেন (তালিকা `PROJECT_STATUS.md` ধারা ৩)।
-- **Phase 1 (Foundation): মালিক শুরুর স্পষ্ট অনুমতি দিয়েছেন (2026-11-23)।** সোর্স কোড লেখা হয়েছে, কিন্তু **GitHub Actions-এ এখনো কোনো build চালানো হয়নি**। তাই কিছুই Build Verified নয়।
-- Phase 1B (Telecom Spike): শুরু হয়নি। শুধু ১৫টি পরীক্ষার পদ্ধতি তৈরি আছে। সবগুলো **Not Yet Tested**।
+- **Phase 0 (Planning): সম্পন্ন এবং অনুমোদিত।**
+- **Phase 1 (Foundation): বাস্তবে সফল।** CI #3 সবুজ ✓ (3m 2s), APK ইনস্টল হয়ে চলেছে, লগ ও share কাজ করেছে (2026-11-25)। বাকি যাচাই: `PROJECT_STATUS.md` ধারা ৫ক-এর C4 (বাংলা), C5 (Dark/AMOLED), C6 (restart)।
+- **Phase 1B (Telecom Spike): সোর্স লেখা হয়েছে (2026-11-25), কিন্তু একবারও build হয়নি এবং ফোনে পরীক্ষাও হয়নি।** ১৫টি পরীক্ষা (T1–T15) সবগুলো **Not Yet Tested**।
 
 ## ২. মালিকের নির্দেশ (ক্রম মেনে)
 
-1. পুরো Foundation তৈরি করা এবং GitHub Actions দিয়ে বাস্তব build যাচাই।
-2. Foundation সফল হলে মালিককে রিপোর্ট দেওয়া।
-3. তারপর Phase 1B Telecom Spike শুরু। এর আগে নয়।
-4. কোনো পরীক্ষার ফল অনুমান করে Passed করা যাবে না।
+1. Foundation বাস্তবে build যাচাই, তারপর রিপোর্ট। **সম্পন্ন।**
+2. তারপর Phase 1B Telecom Spike। **কোড লেখা হয়েছে; এখন build যাচাই বাকি।**
+3. কোনো পরীক্ষার ফল অনুমান করে Passed করা যাবে না।
+4. Phase 1B-র ফল ঘোষণার আগে ডিভাইস পরীক্ষা (Device A ও Device B) বাস্তবে হতে হবে।
 
 ## ৩. মালিকের কাজের পরিবেশ
 
@@ -26,7 +26,7 @@
 
 ## ৪. Phase 1 Foundation-এ কী আছে
 
-- Modules: `:app`, `:core:model`, `:core:common`, `:core:designsystem`। বাকিগুলো যে ধাপে লাগবে সে ধাপে যোগ হবে।
+- Modules: `:app`, `:core:model`, `:core:common`, `:core:designsystem`, এবং Phase 1B-তে `:core:telecom`, `:feature:incall`। বাকিগুলো যে ধাপে লাগবে সে ধাপে যোগ হবে।
 - `applicationId` ও package: `com.saiful.dialme`।
 - Stack: Kotlin 2.2.20, AGP 8.13.2, Gradle 8.14.3, Compose BOM, Material 3, Navigation Compose, Hilt (শুধু `:app`, ViewModel `by viewModels()` দিয়ে), kotlinx.serialization, JDK 17।
 - Theme system skeleton: `ThemeSpec`, `ThemeCodec`, `DialMeTheme`। স্থায়ী সংরক্ষণ নেই (Phase 7)।
@@ -34,9 +34,9 @@
 - Debug signing: public `keystore/dialme-debug.jks`। এটি গোপন নয়। **কখনো release-এ ব্যবহার করবেন না।**
 - minSdk 29, compileSdk ও targetSdk 36। পুরো দলিল `docs/DEPENDENCIES.md`-এ।
 
-## ৪ক. সংস্করণ নিয়ে সতর্কতা
+## ৪ক. সংস্করণ সম্পর্কে নোট
 
-AndroidX ও Compose BOM-এর সংস্করণ এই পরিবেশে যাচাই করা যায়নি। প্রথম build-এ "Could not find ..." ত্রুটি এলে `gradle/libs.versions.toml`-এ সংশ্লিষ্ট সংস্করণ ঠিক করুন। অনুমান করে একসাথে অনেক সংস্করণ বদলাবেন না।
+AndroidX ও Compose BOM-এর সংস্করণ প্রথম build-এ resolve হয়েছে (assembleDebug সফল)। ভবিষ্যতে নতুন সংস্করণ যোগ করলে "Could not find ..." ত্রুটি এলে `gradle/libs.versions.toml`-এ সংশ্লিষ্ট সংস্করণ ঠিক করুন। অনুমান করে একসাথে অনেক সংস্করণ বদলাবেন না।
 
 ## ৫. পরীক্ষার ডিভাইস
 
@@ -62,8 +62,17 @@ AndroidX ও Compose BOM-এর সংস্করণ এই পরিবেশ�
 - DialMe default dialer হলে এর ত্রুটিতে ফোনে কল করা অসম্ভব হতে পারে। আগের Phone app রাখতে বলুন। ফেরার পথ: Settings → Apps → Default apps → Phone app।
 - জরুরি নম্বরে পরীক্ষার জন্য কল করতে বলবেন না। জরুরি কল সবসময় Telecom দিয়ে যাবে।
 
-## ৮. পরবর্তী কাজ
+## ৮. Phase 1B-র নকশা (সংক্ষেপে; বিস্তারিত `docs/TELECOM.md`)
 
-1. মালিক repository বানিয়ে ZIP আপলোড করে Actions চালাবেন (`BUILD_INSTRUCTIONS.md`)।
-2. build-এর ফলাফল (সফল হলে নিশ্চিতকরণ, ব্যর্থ হলে পুরো log) দেখে Claude রিপোর্ট দেবে বা ঠিক করবে।
-3. Foundation Build Verified হলে রিপোর্টের পর মালিকের নির্দেশে Phase 1B।
+- `CallManager` সাধারণ `object` (Hilt নয়), `DialMeInCallService` তাকে খবর দেয়। UI শুধু `CallManager.calls` ও `CallManager.audio` পড়ে।
+- `TelecomSpikeScreen` (Settings → Telecom spike) default dialer অবস্থা, permission, full-screen notification অনুমতি, SIM তালিকা ও কল বোতাম দেখায়। এটি নিজে থেকে কখনো ডায়াল করে না।
+- লগে ফোন নম্বর মাস্ক করা থাকে। Call-এর প্রতিটি অবস্থা বদল `CallManager` tag-এ লেখা হয়।
+- অনিশ্চিত: outgoing কলে activity খোলা, full-screen intent, HyperOS pop-up, SIM slot শনাক্ত, `CallAudioState` (deprecated)। এগুলো অনুমান নয়, পরীক্ষায় দেখতে হবে।
+- ডিফল্ট থিম ব্যবহার হয় in-call স্ক্রিনে। App-wide theme Phase 7-এ।
+
+## ৯. পরবর্তী কাজ
+
+1. মালিক `inbox-phase1b-telecom-spike.zip` আপলোড করবেন। CI-র ফল (সবুজ বা ব্যর্থ log) দেখুন।
+2. compile-ত্রুটি এলে পুরো log পড়ে মূল কারণ খুঁজুন। অনুমান করে অনেক ফাইল বদলাবেন না।
+3. Build সফল হলে মালিককে Phase 1B পরীক্ষা (T1–T15) পরিচালনা করান। প্রথমে Spike স্ক্রিনের অবস্থা ও SIM তালিকা।
+4. Device A কোন ফোন, এবং তার default Phone app কোনটি: Spike স্ক্রিনই দেখাবে। মালিক Device A নিশ্চিত করবেন।

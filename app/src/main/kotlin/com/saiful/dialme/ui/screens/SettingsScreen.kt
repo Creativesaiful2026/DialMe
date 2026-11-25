@@ -59,6 +59,7 @@ fun SettingsScreen(
     onThemeChange: ((ThemeSpec) -> ThemeSpec) -> Unit,
     onThemeReset: () -> Unit,
     onOpenDiagnostics: () -> Unit,
+    onOpenTelecomSpike: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -170,6 +171,12 @@ fun SettingsScreen(
         ListItem(
             headlineContent = { Text(stringResource(R.string.settings_open_log)) },
             modifier = Modifier.clickable(onClick = onOpenDiagnostics),
+        )
+
+        ListItem(
+            headlineContent = { Text(stringResource(R.string.settings_open_telecom)) },
+            supportingContent = { Text(stringResource(R.string.settings_open_telecom_hint)) },
+            modifier = Modifier.clickable(onClick = onOpenTelecomSpike),
         )
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))

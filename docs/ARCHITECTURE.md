@@ -1,12 +1,12 @@
 # DialMe — স্থাপত্যের সারসংক্ষেপ
 
-(পূর্ণ Phase 0 Technical Architecture ডকুমেন্টের সংক্ষিপ্ত রূপ। এই ফাইলে শুধু Phase 1-এ বাস্তবে যা আছে তা বর্ণিত।)
+(পূর্ণ Phase 0 Technical Architecture ডকুমেন্টের সংক্ষিপ্ত রূপ। এই ফাইলে শুধু বাস্তবে যা আছে তা বর্ণিত।)
 
 ## স্তর
 
 Compose UI → ViewModel (`StateFlow`) → Repository interface (`:core:model`) → implementation (`:app`-এ এখন in-memory)।
 
-## Module (Phase 1)
+## Module
 
 | Module | বিষয় |
 |---|---|
@@ -14,8 +14,10 @@ Compose UI → ViewModel (`StateFlow`) → Repository interface (`:core:model`) 
 | `:core:model` | `ThemeSpec`, `ThemeCodec`, `ThemeRepository` (শুধু Kotlin কোড, UI নির্ভরতা নেই) |
 | `:core:common` | `DialMeLog`, `RotatingLogFile`, `CrashHandler` |
 | `:core:designsystem` | `DialMeTheme`, colour scheme, shapes, typography scaling, spacing |
+| `:core:telecom` | (Phase 1B) `InCallService`, `CallManager`, call placing, SIM list, default dialer role, notification |
+| `:feature:incall` | (Phase 1B) `InCallActivity` ও সাদামাটা call স্ক্রিন |
 
-পরের ধাপে যোগ হবে: `:core:data` (Phase 2), `:core:telecom` (Phase 1B), `:feature:*` (Phase 2 থেকে)।
+পরের ধাপে যোগ হবে: `:core:data` (Phase 2), বাকি `:feature:*` (Phase 2 থেকে)।
 
 নির্ভরতার নিয়ম: feature → core; feature থেকে feature নয়; `:app` সব জোড়া লাগায়।
 
@@ -29,4 +31,4 @@ PC ছাড়া সমস্যা ধরার জন্য `DialMeLog` Logc
 
 ## Telecom
 
-এখনো তৈরি হয়নি (Phase 1B)।
+Phase 1B-তে সোর্স লেখা হয়েছে (Build Verified নয়)। বিস্তারিত: `docs/TELECOM.md`।

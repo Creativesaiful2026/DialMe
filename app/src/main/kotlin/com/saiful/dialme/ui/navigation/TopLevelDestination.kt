@@ -24,3 +24,4 @@ enum class TopLevelDestination(
 }
 
 const val ROUTE_DIAGNOSTICS = "diagnostics"
+const val ROUTE_TELECOM_SPIKE = "telecom_spike"

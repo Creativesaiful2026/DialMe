@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!-- Own task, shown over the lock screen, not listed in Recents. -->
+        <activity
+            android:name="com.saiful.dialme.feature.incall.InCallActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showWhenLocked="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.DialMe.InCall"
+            android:turnScreenOn="true" />
+    </application>
+
+</manifest>

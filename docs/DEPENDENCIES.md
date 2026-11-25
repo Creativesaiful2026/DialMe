@@ -1,6 +1,6 @@
 # DialMe — Dependency ও সংস্করণ
 
-সব সংস্করণ `gradle/libs.versions.toml`-এ এক জায়গায়। **Build Verified: না** (এখনো GitHub Actions-এ চালানো হয়নি)।
+সব সংস্করণ `gradle/libs.versions.toml`-এ এক জায়গায়। `assembleDebug` GitHub Actions-এ সফল (মালিকের রিপোর্ট, 2026-11-25), তাই নিচের সব সংস্করণ resolve হয়েছে।
 
 ## Build
 
@@ -19,14 +19,14 @@
 |---|---|---|
 | kotlinx.coroutines | 1.10.2 | release tag পাওয়া গেছে |
 | kotlinx.serialization | 1.9.0 | release tag পাওয়া গেছে |
-| Compose BOM | 2025.09.01 | **যাচাই করা যায়নি** |
-| androidx.core:core-ktx | 1.17.0 | **যাচাই করা যায়নি** |
-| androidx.activity:activity-compose | 1.11.0 | **যাচাই করা যায়নি** |
-| androidx.lifecycle (runtime-compose) | 2.9.4 | **যাচাই করা যায়নি** |
-| androidx.navigation:navigation-compose | 2.9.4 | **যাচাই করা যায়নি** |
+| Compose BOM | 2025.09.01 | build-এ resolve হয়েছে |
+| androidx.core:core-ktx | 1.17.0 | build-এ resolve হয়েছে |
+| androidx.activity:activity-compose | 1.11.0 | build-এ resolve হয়েছে |
+| androidx.lifecycle (runtime-compose) | 2.9.4 | build-এ resolve হয়েছে |
+| androidx.navigation:navigation-compose | 2.9.4 | build-এ resolve হয়েছে |
 | JUnit | 4.13.2 | — |
 
-"যাচাই করা যায়নি" মানে এই পরিবেশ Google-এর Maven repository-তে পৌঁছাতে পারে না। প্রথম Actions build-এ সংস্করণ না পাওয়া গেলে "Could not find ..." ত্রুটি আসবে, তখন শুধু সংশ্লিষ্ট সংস্করণ ঠিক করা হবে।
+Claude-এর পরিবেশ Google-এর Maven repository-তে পৌঁছাতে পারে না, তাই এই সংস্করণগুলো আগে যাচাই করা যায়নি। এখন Actions build সফল হওয়ায় সেটি নিশ্চিত।
 
 ## ইচ্ছাকৃতভাবে বাদ
 

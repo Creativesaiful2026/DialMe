@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notif_channel_incoming_name">ইনকামিং কল</string>
+    <string name="notif_channel_incoming_desc">লক স্ক্রিনের উপর এবং ভাসমান নোটিফিকেশন হিসেবে ইনকামিং কল দেখায়</string>
+    <string name="notif_channel_ongoing_name">চলমান কল</string>
+    <string name="notif_incoming_call">ইনকামিং কল</string>
+    <string name="notif_ongoing_call">চলমান কল</string>
+    <string name="notif_action_answer">ধরুন</string>
+    <string name="notif_action_decline">কেটে দিন</string>
+    <string name="notif_action_hangup">কল কাটুন</string>
+    <string name="notif_unknown_caller">অচেনা নম্বর</string>
+</resources>

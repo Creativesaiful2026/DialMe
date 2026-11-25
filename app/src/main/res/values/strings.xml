@@ -37,4 +37,37 @@
     <string name="diagnostics_clear">Clear</string>
     <string name="diagnostics_empty">The log is empty.</string>
     <string name="diagnostics_share_subject">DialMe log</string>
+    <string name="settings_open_telecom">Telecom spike (test)</string>
+    <string name="settings_open_telecom_hint">Default Phone app, SIM list and test calls</string>
+
+    <string name="telecom_title">Telecom spike (Phase 1B)</string>
+    <string name="telecom_safety_note">For testing only. Keep your current Phone app installed. Never test with an emergency number.</string>
+    <string name="telecom_section_status">Status</string>
+    <string name="telecom_default_dialer">DialMe is the default Phone app</string>
+    <string name="telecom_current_default">Current default Phone app: %1$s</string>
+    <string name="telecom_perm_call_phone">Permission: make calls</string>
+    <string name="telecom_perm_phone_state">Permission: read SIM information</string>
+    <string name="telecom_perm_notifications">Notifications allowed</string>
+    <string name="telecom_fullscreen">Full-screen call notifications allowed</string>
+    <string name="telecom_yes">Yes</string>
+    <string name="telecom_no">No</string>
+    <string name="telecom_unknown">unknown</string>
+    <string name="telecom_request_role">Make DialMe the default Phone app</string>
+    <string name="telecom_request_permissions">Grant permissions</string>
+    <string name="telecom_open_fullscreen_settings">Open full-screen notification setting</string>
+    <string name="telecom_role_unavailable">The system does not offer the default Phone app option on this device.</string>
+    <string name="telecom_role_hint">To switch back: Settings, Apps, Default apps, Phone app.</string>
+    <string name="telecom_section_sims">SIMs</string>
+    <string name="telecom_no_sims">No SIM found, or the permission to read SIM information is missing.</string>
+    <string name="telecom_sim_item">SIM %1$d: %2$s</string>
+    <string name="telecom_sim_item_unknown_slot">SIM: %1$s</string>
+    <string name="telecom_section_call">Test call</string>
+    <string name="telecom_number_label">Number</string>
+    <string name="telecom_call_sim">Call with SIM %1$d</string>
+    <string name="telecom_call_account">Call with %1$s</string>
+    <string name="telecom_call_default">Call with the default SIM</string>
+    <string name="telecom_result_started">Call requested. The call screen should open.</string>
+    <string name="telecom_result_invalid">That is not a valid number.</string>
+    <string name="telecom_result_no_permission">Permission to make calls is missing.</string>
+    <string name="telecom_result_error">The call could not be started.</string>
 </resources>

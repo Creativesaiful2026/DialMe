@@ -11,7 +11,7 @@ DialMe একটি open-source Android SIM-ভিত্তিক Phone/Dialer �
 
 ## অবস্থা
 
-প্রকল্প প্রাথমিক পর্যায়ে। **Phase 1 (Foundation)** সোর্স লেখা হয়েছে, কিন্তু এখনো build যাচাই হয়নি। কল করা বা ধরার কোনো সুবিধা এখনো নেই। বিস্তারিত: `PROJECT_STATUS.md`।
+প্রকল্প প্রাথমিক পর্যায়ে। **Phase 1 (Foundation)** build হয়েছে ও ইনস্টল করে চালানো গেছে। **Phase 1B (Telecom Spike)** সোর্স লেখা হয়েছে, কিন্তু এখনো build বা ফোনে যাচাই হয়নি। বিস্তারিত: `PROJECT_STATUS.md`।
 
 ## ডকুমেন্টেশন
 
@@ -23,6 +23,7 @@ DialMe একটি open-source Android SIM-ভিত্তিক Phone/Dialer �
 | `CHANGELOG.md` | প্রকল্পের ইতিহাস |
 | `CONTRIBUTING.md` | অবদান রাখার নিয়ম |
 | `docs/ARCHITECTURE.md` | স্থাপত্যের সারসংক্ষেপ |
+| `docs/TELECOM.md` | Telecom Spike-এর নকশা ও অনিশ্চিত বিষয় |
 | `docs/DEPENDENCIES.md` | ব্যবহৃত library ও সংস্করণ |
 
 ## গোপনীয়তা

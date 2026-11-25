@@ -1,15 +1,14 @@
 # DialMe — PROJECT_STATUS
 
-সর্বশেষ হালনাগাদ: 2026-11-23
+সর্বশেষ হালনাগাদ: 2026-11-25
 
 ## ১. সারাংশ
 
 | বিষয় | অবস্থা |
 |---|---|
 | **Phase 0 Approval Status** | **APPROVED** (মালিকের ঘোষণা অনুযায়ী) |
-| Phase 1 (Foundation) অনুমতি | দেওয়া হয়েছে (2026-11-23) |
-| Phase 1 বর্তমান অবস্থা | সোর্স কোড লেখা হয়েছে (Implemented)। GitHub Actions-এ **এখনো চালানো হয়নি, তাই Build Verified নয়** |
-| Phase 1B (Telecom Spike) | Phase 1 Foundation সফল build-এর পর মালিকের কাছে রিপোর্ট দিয়ে তবেই শুরু হবে |
+| Phase 1 (Foundation) | `assembleDebug` বাস্তবে সফল। CI #3 সবুজ ✓ (3m 2s, মালিকের স্ক্রিনশট)। APK ইনস্টল হয়ে চলেছে। বাকি যাচাই: ধারা ৫ক-এর C4–C6 |
+| Phase 1B (Telecom Spike) | **সোর্স Implemented (2026-11-25)। এখনো build হয়নি, ফোনে পরীক্ষাও হয়নি।** T1–T15 সব Not Yet Tested |
 
 ## ২. অবস্থার সংজ্ঞা
 
@@ -20,41 +19,75 @@ Implemented · Build Verified · Unit Tested · Device Tested · Not Yet Tested
 ## ৩. Phase 0 অনুমোদিত সিদ্ধান্ত
 
 1. minSdk 29; compileSdk ও targetSdk 36।
-2. ১১টি Gradle module (প্রয়োজন অনুযায়ী ধাপে ধাপে যোগ হবে; Phase 1-এ ৪টি)।
+2. ১১টি Gradle module (ধাপে ধাপে যোগ হচ্ছে; এখন ৬টি)।
 3. Phase 1B (Telecom Spike) নতুন ধাপ হিসেবে।
-4. Permission পরিবর্তন: SEND_SMS যোগ; ANSWER_PHONE_CALLS, FOREGROUND_SERVICE, READ_MEDIA_IMAGES বাদ।
+4. Permission পরিবর্তন: SEND_SMS যোগ (এখনো যোগ হয়নি, Phase 6); ANSWER_PHONE_CALLS, FOREGROUND_SERVICE, READ_MEDIA_IMAGES বাদ।
 5. Blocking ও spam-এর সীমিত পরিধি (v1-এ cloud spam lookup নেই)।
 6. Public repository, GPL-3.0।
 7. Code upload পদ্ধতি: Option A (ZIP আপলোড + `inbox-unzip` workflow)। মালিক নির্দিষ্ট করে বলেননি, তাই প্রস্তাবিত পদ্ধতি ধরা হয়েছে।
 8. পরীক্ষার জন্য ফোন: দুটি Redmi Note 12 (ধারা ৭)।
 
-## ৪. Phase 0 থেকে সচেতনভাবে পরিবর্তিত বিষয় (মালিকের নজরে আনা হয়েছে)
+## ৪. সচেতনভাবে নেওয়া সিদ্ধান্ত ও Phase 0 থেকে পরিবর্তন
 
-- **Debug signing:** Phase 0-এ ছিল Secrets-এ keystore। এখন public repository-তে `keystore/dialme-debug.jks` কমিট করা হয়েছে। এটি জনসাধারণের জানা debug key (password `android`), গোপন নয়, শুধু debug build-এর স্থায়ী signature-এর জন্য। কারণ: ফোন থেকে নিরাপদে secret keystore বানানোর সহজ পথ নেই, আর public repo-তে artifact বা log-এ key ফাঁস হওয়ার ঝুঁকি আছে। **Release signing আলাদাভাবে Phase 10-এ ঠিক হবে। এই key release-এ ব্যবহার করা যাবে না।**
-- **ZIP আপলোড:** `inbox/` ফোল্ডারের বদলে repository-র root-এ `inbox-*.zip`। কারণ GitHub মোবাইল ওয়েবে ফোল্ডার বেছে আপলোড কঠিন।
-- **`.github/` ZIP-এ নেই:** GitHub Actions-এর token দিয়ে workflow ফাইল বদলানো যায় না। তাই `ci.yml` ও `inbox-unzip.yml` একবার হাতে তৈরি করতে হয়।
-- `release.yml` ও `keystore-setup.yml` Phase 10-এ।
-- `applicationId` ও package: `com.saiful.dialme` (Claude বেছে নিয়েছে; মালিক চাইলে Phase 1 build-এর আগেই বদলানো সহজ, পরে কঠিন)।
+- **Debug signing:** public `keystore/dialme-debug.jks` (password `android`), গোপন নয়, শুধু debug build-এর স্থায়ী signature-এর জন্য। **Release-এ ব্যবহার করা যাবে না।** Release signing Phase 10-এ।
+- **ZIP আপলোড:** root-এ `inbox-*.zip`। `.github/` ZIP-এ থাকে না; `ci.yml` ও `inbox-unzip.yml` হাতে তৈরি।
+- `applicationId` ও package: `com.saiful.dialme`।
+- **Phase 1B-র নকশা সিদ্ধান্ত (Claude-এর):**
+  - নতুন module: `:core:telecom` ও `:feature:incall`।
+  - `CallManager` Hilt-এর বদলে সাধারণ process-wide `object`, কারণ সিস্টেম `InCallService` বানায়।
+  - In-call স্ক্রিন এখন ডিফল্ট theme ব্যবহার করে (app-wide theme Phase 7-এ)।
+  - Audio route-এ `CallAudioState` (Android 14-এ deprecated, কিন্তু ন্যূনতম ঝুঁকির জন্য)।
+  - Notification সাধারণ ধরনের (CallStyle নয়)।
+  - লগে ফোন নম্বর মাস্ক করা হয় (শেষ দুই অঙ্ক ছাড়া সব `*`)।
 
 ## ৫. Phase 1 Foundation — বৈশিষ্ট্যভিত্তিক অবস্থা
 
+| বৈশিষ্ট্য | Implemented | Build Verified (`assembleDebug`) | Unit Tested | Device Tested |
+|---|---|---|---|---|
+| Gradle প্রজেক্ট, wrapper (8.14.3), version catalog | হ্যাঁ | হ্যাঁ | — | — |
+| Modules: `:app`, `:core:model`, `:core:common`, `:core:designsystem` | হ্যাঁ | হ্যাঁ | — | — |
+| ৫-ট্যাব navigation ও placeholder স্ক্রিন | হ্যাঁ | হ্যাঁ | — | আংশিক (স্ক্রিনশটে ৫-ট্যাব bar দেখা গেছে) |
+| Theme system skeleton | হ্যাঁ | হ্যাঁ | CI #3-এ সফল (run সবুজ) | আংশিক (স্ক্রিনশটে নীল accent, Light, গোলাকার card) |
+| Settings: theme mode, dynamic color, accent, corner radius | হ্যাঁ | হ্যাঁ | — | আংশিক (স্ক্রিনশট) |
+| Diagnostics: in-app log, crash handler | হ্যাঁ | হ্যাঁ | `RotatingLogFile` পরীক্ষা: CI #3-এ সফল | হ্যাঁ: লগে শুরুর লাইন দেখা গেছে |
+| লগ share | হ্যাঁ | হ্যাঁ | — | হ্যাঁ (মালিকের রিপোর্ট: "শেয়ার হয়") |
+| English ও বাংলা string | হ্যাঁ | হ্যাঁ | — | বাংলা Not Yet Tested |
+| Hilt (শুধু `:app`) | হ্যাঁ | হ্যাঁ | — | হ্যাঁ (অ্যাপ চালু হয়েছে) |
+| GitHub Actions: `ci.yml`, `inbox-unzip.yml` | হ্যাঁ | CI #3 সফল (Inbox Unzip #1 সফল, 10s) | — | — |
+
+**নোট:** CI #3 "Manually run by github-actions[bot]" হিসেবে দেখা গেছে, অর্থাৎ Inbox Unzip থেকে CI চালু করার ধাপও কাজ করেছে। CI #1 ও #2 লাল ছিল, কারণ তখনো প্রজেক্ট আপলোড হয়নি (প্রত্যাশিত)। CI-র ধাপভিত্তিক log আমি দেখিনি; run সবুজ হওয়ায় সব ধাপ (build, unit test, lint) সফল ধরা হচ্ছে, কারণ workflow-তে কোনো ধাপের ব্যর্থতা উপেক্ষা করা হয় না।
+
+## ৫ক. Foundation চূড়ান্ত যাচাই তালিকা
+
+| ক্রম | যাচাই | অবস্থা |
+|---|---|---|
+| C1 | CI run সবুজ ✓ | **হ্যাঁ** (CI #3, 3m 2s, স্ক্রিনশট) |
+| C2 | App log খুললে শুরুর লাইন দেখায় | **হ্যাঁ**: `DialMe 0.1.0 (build 1) started on Xiaomi 22101317C, Android 14 (API 34)` |
+| C3 | লগ Share কাজ করে | **হ্যাঁ** (মালিকের রিপোর্ট) |
+| C4 | ফোনের ভাষা বাংলা করলে অ্যাপের লেখা বাংলায় আসে | Not Yet Tested |
+| C5 | Dark ও AMOLED black বেছে দেখা | Not Yet Tested |
+| C6 | অ্যাপ বন্ধ করে আবার খুললে crash নেই | Not Yet Tested |
+
+## ৫খ. Phase 1B — বৈশিষ্ট্যভিত্তিক অবস্থা
+
+সবকিছু সোর্স লেখা হয়েছে মাত্র। কোনোটাই build বা ডিভাইসে যাচাই হয়নি।
+
 | বৈশিষ্ট্য | Implemented | Build Verified | Unit Tested | Device Tested |
 |---|---|---|---|---|
-| Gradle প্রজেক্ট, wrapper (8.14.3), version catalog | হ্যাঁ | না | — | — |
-| Modules: `:app`, `:core:model`, `:core:common`, `:core:designsystem` | হ্যাঁ | না | — | — |
-| Compose অ্যাপ কাঠামো ও ৫-ট্যাব navigation (placeholder স্ক্রিন) | হ্যাঁ | না | — | না |
-| Theme system skeleton (`ThemeSpec`, `ThemeCodec`, `DialMeTheme`) | হ্যাঁ | না | লেখা হয়েছে, চালানো হয়নি | না |
-| Settings: theme mode, dynamic color, accent, corner radius (শুধু memory-তে) | হ্যাঁ | না | — | না |
-| Diagnostics: in-app log, crash handler, log share | হ্যাঁ | না | `RotatingLogFile` পরীক্ষা লেখা, চালানো হয়নি | না |
-| English ও বাংলা string resources | হ্যাঁ | না | — | না |
-| Hilt (শুধু `:app`) | হ্যাঁ | না | — | — |
-| GitHub Actions: `ci.yml`, `inbox-unzip.yml` | হ্যাঁ | না | — | — |
+| Default Phone app role অনুরোধ ও manifest শর্ত (`ACTION_DIAL`, `tel:`, `InCallService`) | হ্যাঁ | না | — | Not Yet Tested |
+| `DialMeInCallService` ও `CallManager` | হ্যাঁ | না | — | Not Yet Tested |
+| কল করা (`TelecomManager.placeCall`), SIM বেছে নেওয়া | হ্যাঁ | না | — | Not Yet Tested |
+| SIM তালিকা ও slot নম্বর শনাক্ত | হ্যাঁ | না | — | Not Yet Tested |
+| In-call স্ক্রিন: ধরা, reject, শেষ, mute, hold, audio route | হ্যাঁ | না | — | Not Yet Tested |
+| Incoming ও ongoing notification (full-screen intent, Answer/Decline/Hang up) | হ্যাঁ | না | — | Not Yet Tested |
+| Telecom spike স্ক্রিন (অবস্থা তালিকা, number ও SIM-ভিত্তিক কল বোতাম) | হ্যাঁ | না | — | Not Yet Tested |
+| নম্বর পরিষ্কার ও মাস্ক (`DialNumbers`), call state mapping, সময় ফরম্যাট | হ্যাঁ | না | পরীক্ষা লেখা হয়েছে (১৩টি), চালানো হয়নি | — |
 
-Phase 1 acceptance criteria অনুযায়ী বাকি: `ci.yml` সফল run, debug APK ইনস্টল ও চালু, version catalog ও docs কমিট। **কোনোটিই এখনো যাচাই হয়নি।**
+বিস্তারিত নকশা ও অনিশ্চিত বিষয়: `docs/TELECOM.md`।
 
-## ৬. Dependency যাচাইয়ের অবস্থা
+## ৬. Dependency অবস্থা
 
-`docs/DEPENDENCIES.md` দেখুন। সংক্ষেপে: Kotlin, KSP, Hilt, Gradle, kotlinx.serialization ও kotlinx.coroutines-এর release tag GitHub-এ পাওয়া গেছে, এবং AGP 8.13-এর release note পাওয়া গেছে। AndroidX ও Compose BOM-এর সংস্করণ এই পরিবেশে যাচাই করা যায়নি। প্রথম Actions build-ই সেটি প্রমাণ করবে।
+`docs/DEPENDENCIES.md` দেখুন। Phase 1B নতুন কোনো বাইরের library যোগ করেনি।
 
 ## ৭. পরীক্ষার ডিভাইস (Device A ও Device B নামেই উল্লেখ; ফোন নম্বর রেকর্ড হয় না)
 
@@ -70,7 +103,9 @@ Phase 1 acceptance criteria অনুযায়ী বাকি: `ci.yml` স�
 
 SIM-এর পরিচয়: A-SIM1, A-SIM2, B-SIM1, B-SIM2।
 
-Device A-র বর্তমান default Phone app-এর নাম **শুধু Telecom Testing শুরুর আগে** সংগ্রহ করা হবে। এটি Phase 1 Foundation-এর বাধা নয়।
+**Foundation APK যে ফোনে চলেছে:** লগ অনুযায়ী `Xiaomi 22101317C`, Android 14 (API 34)। এই ফোনটি Device A কিনা, তা এখনো মালিক নিশ্চিত করেননি।
+
+Device A-র বর্তমান default Phone app-এর নাম পরীক্ষার আগে সংগ্রহ হবে। Telecom spike স্ক্রিন এটি নিজেই দেখাবে ("Current default Phone app")।
 
 ## ৮. Phase 1B পরীক্ষার অবস্থা (Device A-তে)
 
@@ -105,16 +140,17 @@ Device A-র বর্তমান default Phone app-এর নাম **শু�
 
 ## ৯. পরিচিত বাগ
 
-কোনো build না চলায় এখনো কোনো বাগ রেকর্ড হয়নি। প্রথম build-এর ফলাফল এখানে লেখা হবে।
+কোনো বাগ রেকর্ড হয়নি। Phase 1B-র কোড এখনো build হয়নি, তাই প্রথম build-এ compile-ত্রুটি আসতে পারে (Claude এই চ্যাটে compile করতে পারে না)।
 
 ## ১০. পরিচিত ঝুঁকি
 
-- Claude এই চ্যাটে compile করতে পারে না। প্রথম build-এ dependency বা সংস্করণজনিত ত্রুটি আসতে পারে। log পাঠালে ঠিক করা হবে।
-- HyperOS-এ background ও pop-up সীমাবদ্ধতা T11-এ বাস্তবে পরীক্ষা হবে।
-- DialMe default dialer হলে এর ত্রুটিতে কল করা যাবে না। আগের Phone app রাখতে হবে।
+- Phase 1B-র সোর্স কোড কখনো compile হয়নি। log পাঠালে ঠিক করা হবে।
+- Outgoing কলে service থেকে activity খোলা, full-screen intent ও HyperOS-এর pop-up সীমাবদ্ধতা অনিশ্চিত (`docs/TELECOM.md`)।
+- DialMe default dialer হলে এর ত্রুটিতে কল করা যাবে না। আগের Phone app রাখতে হবে। ফেরার পথ: Settings → Apps → Default apps → Phone app।
+- জরুরি নম্বরে পরীক্ষার জন্য কখনো কল করা যাবে না।
 
 ## ১১. পরবর্তী কাজ
 
-1. মালিক `BUILD_INSTRUCTIONS.md` অনুযায়ী repository তৈরি করে ZIP আপলোড করবেন এবং Actions চালাবেন।
-2. build সফল হলে (বা ব্যর্থ হলে পুরো log পাঠালে) Claude রিপোর্ট দেবে ও প্রয়োজনে ঠিক করবে।
-3. সফল Foundation-এর রিপোর্টের পর মালিকের নির্দেশে Phase 1B শুরু।
+1. মালিক `inbox-phase1b-telecom-spike.zip` আপলোড করবেন। CI চলবে। সফল হলে APK ইনস্টল।
+2. ব্যর্থ হলে পুরো log পাঠাবেন; Claude ঠিক করবে।
+3. Build সফল হলে ডিভাইস পরীক্ষা: Phase 1B পরীক্ষা-পদ্ধতি (T1–T15) অনুযায়ী। প্রথমে Spike স্ক্রিনের অবস্থা তালিকা ও SIM তালিকা পরীক্ষা (T1, T2, T5)।

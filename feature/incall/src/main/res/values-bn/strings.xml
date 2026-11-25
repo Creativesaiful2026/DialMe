@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="incall_status_dialing">কল করা হচ্ছে…</string>
+    <string name="incall_status_connecting">সংযোগ হচ্ছে…</string>
+    <string name="incall_status_ringing">ইনকামিং কল</string>
+    <string name="incall_status_active">চলমান কল</string>
+    <string name="incall_status_holding">হোল্ডে আছে</string>
+    <string name="incall_status_ending">শেষ হচ্ছে…</string>
+    <string name="incall_status_unknown">কল</string>
+    <string name="incall_unknown_number">অচেনা নম্বর</string>
+    <string name="incall_answer">ধরুন</string>
+    <string name="incall_decline">কেটে দিন</string>
+    <string name="incall_end">কল কাটুন</string>
+    <string name="incall_mute">মিউট</string>
+    <string name="incall_hold">হোল্ড</string>
+    <string name="incall_route_earpiece">ইয়ারপিস</string>
+    <string name="incall_route_speaker">স্পিকার</string>
+    <string name="incall_route_wired">তারযুক্ত হেডসেট</string>
+    <string name="incall_route_bluetooth">ব্লুটুথ</string>
+    <string name="incall_sim_slot">SIM %1$d</string>
+    <string name="incall_other_calls">আরও +%1$d</string>
+</resources>

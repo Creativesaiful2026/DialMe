@@ -4,6 +4,26 @@
 
 ## [Unreleased]
 
+### 2026-11-25 — Phase 1B: Telecom Spike (সোর্স লেখা হয়েছে, Build Verified নয়)
+
+#### যোগ হয়েছে
+- `:core:telecom`: `DialMeInCallService`, `CallManager`, `CallPlacer` (SIM বেছে কল), `SimAccountProvider` (SIM তালিকা ও slot), `DialerRole`, `TelecomStatus`, `DialNumbers`, incoming/ongoing notification ও `CallActionReceiver`।
+- `:feature:incall`: `InCallActivity` ও সাদামাটা `InCallScreen` (ধরা, reject, শেষ, mute, hold, audio route, সময় গণনা)।
+- `:app`: `ACTION_DIAL` ও `tel:` intent filter, Settings → Telecom spike স্ক্রিন, `tel:` লিংক থেকে নম্বর আগে থেকে বসানো (কখনো নিজে ডায়াল করে না)।
+- Permission: `CALL_PHONE`, `READ_PHONE_STATE`, `POST_NOTIFICATIONS`, `USE_FULL_SCREEN_INTENT`।
+- ১৩টি নতুন unit test (লেখা হয়েছে, চালানো হয়নি): `DialNumbersTest`, `CallStateMapperTest`, `DurationFormatterTest`।
+- `docs/TELECOM.md`।
+
+#### সংশোধন
+- Foundation রিপোর্টে unit test সংখ্যা "১৮টি" লেখা হয়েছিল। সঠিক সংখ্যা ২২টি (ThemeSpec 5, ThemeCodec 8, RotatingLogFile 5, InMemoryThemeRepository 4)।
+
+### 2026-11-25 — Phase 1: Foundation build ও প্রথম ডিভাইস পর্যবেক্ষণ
+
+- মালিক জানিয়েছেন Actions-এর artifact থেকে debug APK নামিয়ে ইনস্টল করা গেছে, অর্থাৎ `assembleDebug` বাস্তবে সফল।
+- স্ক্রিনশটে অ্যাপ চালু অবস্থায় দেখা গেছে: Settings স্ক্রিন, ৫-ট্যাব bottom bar, theme mode, dynamic color সুইচ, accent রঙ, corner radius slider।
+- CI #3 সবুজ ✓ (3m 2s)। লগে শুরুর লাইন দেখা গেছে (Xiaomi 22101317C, Android 14), log share কাজ করেছে (মালিকের রিপোর্ট)।
+- বাকি যাচাই: বাংলা লেখা, Dark/AMOLED, restart (`PROJECT_STATUS.md` ধারা ৫ক)।
+
 ### 2026-11-23 — Phase 1: Foundation (সোর্স লেখা হয়েছে, Build Verified নয়)
 
 #### যোগ হয়েছে
