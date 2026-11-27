@@ -9,6 +9,7 @@
 | **Phase 0 Approval Status** | **APPROVED** (মালিকের ঘোষণা অনুযায়ী) |
 | Phase 1 (Foundation) | `assembleDebug` বাস্তবে সফল। CI #3 সবুজ ✓ (3m 2s, মালিকের স্ক্রিনশট)। APK ইনস্টল হয়ে চলেছে। বাকি যাচাই: ধারা ৫ক-এর C4–C6 |
 | Phase 1B (Telecom Spike) | সোর্স Implemented। **CI Run 7 সফল ✓ (commit `16d16e9`, push, 1m 7s)।** Artifact: `DialMe-debug-7` (10.3 MB) ও `reports-7` (89.1 KB)। Run 6 (commit `f02a1f0`, ম্যানুয়াল) ব্যর্থ ছিল এবং শুধু `reports-6` ছিল। দুটি commit-এই Phase 1B-র সোর্স আছে (যাচাই: `:core:telecom`, `:feature:incall`, `TelecomSpikeScreen`)। `Upload debug APK` ধাপ চলেছে, তাই `Build debug APK` ও `Unit tests` ধাপ ব্যর্থ হয়নি (ধাপভিত্তিক log আমি দেখিনি)। `Android Lint` ধাপ এখনো ত্রুটি দেখাচ্ছে (annotation: 1 error, "Process completed with exit code 1"); `continue-on-error: true`-র কারণে run সবুজ। Lint-এর কারণ এখনো অজানা। APK Device A-তে ইনস্টল হয়েছে (স্ক্রিনশটে Telecom spike স্ক্রিন, 2026-11-25 17:46)। T1 **PASS**; T3 **PASS** (মালিকের রিপোর্ট); T2, T5 আংশিক; বাকি সব Not Yet Tested |
+| Batch 1 (Phase 2–4 কোর: ডেটা স্তর ও প্রধান স্ক্রিন) | সোর্স Implemented (2026-11-26)। **CI-তে এখনো চলেনি**, তাই Build Verified নয়। বিস্তারিত ধারা ১০ক |
 
 ## ২. অবস্থার সংজ্ঞা
 
@@ -91,10 +92,12 @@ CI Run 7-এ Phase 1B-র সোর্স compile হয়েছে এবং `
 |---|---|---|---|---|
 | #6 | `f02a1f0` | ম্যানুয়াল (github-actions[bot]) | ব্যর্থ ✗ (1m 45s) | `reports-6` |
 | #7 | `16d16e9` | push ("Allow Android Lint step to continue on error") | সফল ✓ (1m 7s) | `DialMe-debug-7` (10.3 MB), `reports-7` (89.1 KB) |
+| #8 | `37897f7` | push ("Enhance CI workflow with logging and diagnostics") | সফল ✓ (1m 26s) | `DialMe-debug-8`, `reports-8` (129 KB) |
+| #9 | `ee40cc3` | ম্যানুয়াল (github-actions[bot]) | সফল ✓ (49s) | `DialMe-debug-9`, `reports-9` (129 KB) |
 
 **অমীমাংসিত সমস্যা (Lint):** `Android Lint (report only)` ধাপে এখনো 1 error ("Process completed with exit code 1") দেখাচ্ছে। `continue-on-error: true`-র কারণে run সবুজ এবং APK আপলোড হয়েছে। আসল ত্রুটির লেখা আমি দেখিনি (log ও artifact ডাউনলোডে লগইন লাগে)। কারণ **অজানা**। করণীয়: `reports-7` artifact-এর lint রিপোর্ট বা Lint ধাপের log পাঠান। কোড পড়ে পাওয়া অযাচাইকৃত সূত্র `HANDOFF.md` ধারা ৯-এ আছে; এগুলো প্রমাণ নয়।
 
-**Lint নির্ণয়ের নতুন ব্যবস্থা (2026-11-25):** Run 7-এর log লগইন ছাড়া পড়া যায় না (যাচাই: HTTP 404)। তাই একটি diagnostic `ci.yml` তৈরি হয়েছে, যাতে নতুন "Job summary" ধাপ আছে। এটি run-এর পাতায় Lint ত্রুটি (Error/Fatal), ব্যর্থ ধাপের মূল লাইন এবং মডিউলভিত্তিক unit test সংখ্যা লিখবে। Lint ধাপে `--continue` যোগ হয়েছে, যাতে সব মডিউল চেক হয়। স্ক্রিপ্ট শুধু নকল ডেটায় স্থানীয়ভাবে পরীক্ষিত; **CI-তে এখনো চলেনি**। হাতে বসানো বাকি: `.github/workflows/ci.yml` (REPLACE)। বসার পর পরের run-এর পাতা পড়ে কারণ নিশ্চিত করা হবে।
+**Lint নির্ণয়ের অবস্থা (2026-11-25, GitHub-এর পাবলিক run পাতা থেকে যাচাই):** Diagnostic `ci.yml` (Job summary ধাপসহ) `main`-এ বসেছে। Run 8 (commit `37897f7`, push, 1m 26s) ও Run 9 (commit `ee40cc3`, ম্যানুয়াল, 49s) দুটিই সফল; Artifact: `DialMe-debug-8`/`reports-8` (10.3 MB / 129 KB) ও `DialMe-debug-9`/`reports-9`। দুটি run-এই Annotations: 1 error ("Process completed with exit code 1", Lint ধাপ) ও 2 warning (Node.js 20 deprecation, setup-java v4 deprecation)। Job summary-র লেখা পাতার স্ট্যাটিক HTML-এ আসে না, তাই Lint ত্রুটির কারণ ও unit test সংখ্যা আমি **এখনো দেখিনি**। Log ও artifact ডাউনলোডে লগইন লাগে (HTTP 404)। সমাধান: summary স্ক্রিপ্টে Annotation যোগ করা নতুন `ci.yml` (Lint Error, ব্যর্থ ধাপের মূল লাইন ও মডিউলভিত্তিক unit test সংখ্যা Annotation হিসেবে আসবে, যা পাতায় পড়া যায়)। স্ক্রিপ্ট শুধু নকল ডেটায় স্থানীয়ভাবে পরীক্ষিত; **CI-তে এখনো চলেনি**। হাতে বসানো বাকি: `.github/workflows/ci.yml` (REPLACE)।
 
 ## ৬. Dependency অবস্থা
 
@@ -157,6 +160,7 @@ Device A-তে পরীক্ষা শুরু হয়েছে (2026-11-2
 - Telecom spike স্ক্রিন: DialMe default Phone app = Yes · make calls = Yes · read SIM information = Yes · Notifications allowed = Yes · **Full-screen call notifications allowed = No**।
 - SIM তালিকা: SIM 1, SIM 2 (ক্যারিয়ারের নামসহ দেখা গেছে)।
 - T6, T7, T10-এর প্রথম চক্র এই সেটিং যেমন আছে (Full-screen = No) তেমনই চালানো হবে। সেটিং বদলের পরীক্ষা T11-এ।
+- Device A-তে ইনস্টল করা APK: `DialMe-debug-7` ধরা হচ্ছে। নতুন APK #8 ও #9 তৈরি আছে; পরীক্ষায় যে APK ইনস্টল থাকবে তার run নম্বর লিখে রাখতে হবে।
 - HyperOS-এর অন্য সেটিং (Autostart, Battery, background pop-up, lock screen) এখনো লেখা হয়নি।
 
 ## ৯. পরিচিত বাগ
@@ -172,9 +176,48 @@ Device A-তে পরীক্ষা শুরু হয়েছে (2026-11-2
 - DialMe default dialer হলে এর ত্রুটিতে কল করা যাবে না। আগের Phone app রাখতে হবে। ফেরার পথ: Settings → Apps → Default apps → Phone app।
 - জরুরি নম্বরে পরীক্ষার জন্য কখনো কল করা যাবে না।
 
+## ১০ক. মালিকের সিদ্ধান্ত: পুরো অ্যাপ বানিয়ে একসাথে পরীক্ষা (2026-11-26)
+
+- **সিদ্ধান্ত (মালিক):** "একেবারে পুরো এপ বানিয়ে টেস্ট করতে চাই। বাকী কাজ শুরু করো।" Dialme.md ধারা ১০.৫ ("বর্তমান ফেজের acceptance শেষ না করে পরের ফেজ নয়") মালিকের অনুমোদনে এই কাজের জন্য শিথিল। Phase 1B-র T4–T15 ডিভাইস পরীক্ষা Device B হাতে এলে পরে একসাথে হবে।
+- **কাজের পদ্ধতি:** কাজ Batch-এ ভাগ করা। প্রতিটি Batch আলাদা ZIP। প্রতিটির পর CI যাচাই (Claude নিজে run পাতা ও Annotations পড়বে), যাতে compile ত্রুটি জমে না যায়। ডিভাইস পরীক্ষা সব বা অনেক Batch শেষে, মালিকের ইচ্ছামতো।
+- **ঝুঁকি (Claude-এর মূল্যায়ন):** Phase 5 (কলিং) HyperOS-এ কেমন চলে, তা T4–T15-এর ফলের উপর নির্ভর করে। সেই ফল আসার আগে কলিং-নির্ভর UI বানালে rework লাগতে পারে। তাই কলিং-নির্ভর Batch পরে রাখা হয়েছে।
+
+**Batch পরিকল্পনা (ক্রম বদলাতে পারে):**
+
+| Batch | বিষয় (Dialme.md-র ফেজ) | অবস্থা |
+|---|---|---|
+| 1 | ডেটা স্তর (`:core:data`), প্রধান স্ক্রিন: Dialpad, Contacts, Favorites, Recents, থিম সংরক্ষণ (Phase 2–4-এর কোর) | সোর্স লেখা হয়েছে, CI-তে চলেনি |
+| 2 | Settings সংগঠন (ধারা ৪.৪), Call History বিস্তার (তারিখ ফিল্টার, বিস্তারিত, পরিসংখ্যান), Contacts উন্নয়ন | পরিকল্পিত |
+| 3 | Phase 5: আসল কলিং UI (incoming, active call, audio routing, hold, waiting) | পরিকল্পিত (T4–T15-এর ফলের উপর নির্ভর) |
+| 4 | Phase 6 ও 7: caller screen, quick response, call notes, reminders; theme engine, font, icon, layout, theme import/export | পরিকল্পিত |
+| 5 | Phase 8: blocking, privacy mode, smart suggestions, automation, statistics (Room লাগবে) | পরিকল্পিত |
+| 6 | Phase 9: backup/restore, optimization, accessibility, localization | পরিকল্পিত |
+| 7 | Phase 10: পূর্ণ পরীক্ষা, ডকুমেন্টেশন, GPL যাচাই, release | পরিকল্পিত |
+
+**Batch 1-এর অবস্থা (2026-11-26):**
+
+| বিষয় | অবস্থা |
+|---|---|
+| Implemented | হ্যাঁ। নতুন `:core:data` (Contacts ও CallLog পড়া, T9 ও সার্চ, কল-গ্রুপিং, DataStore-এ থিম সংরক্ষণ); `:app`-এ DialpadScreen, ContactsScreen, FavoritesScreen, RecentsScreen, কল চালু করা ও SIM বাছাই |
+| Build Verified | **না।** CI-তে এখনো চলেনি |
+| Unit Tested | স্থানীয়ভাবে ১৮টি test পাস (T9, ContactSearch, CallLogGrouping, PhoneKeys)। Kotlin 2.4.x কম্পাইলারে ও নকল JUnit রানারে চলেছে; প্রজেক্টের Kotlin 2.2.20 ও আসল JUnit-এ নয়, তাই CI-র প্রমাণ নয় |
+| স্থানীয় কম্পাইল | `ContactsQuery`, `CallLogQuery` `android-36.jar`-এর বিরুদ্ধে ত্রুটি ছাড়া কম্পাইল হয়েছে। Flow, DataStore, Hilt ও Compose অংশ কম্পাইল করা যায়নি (library নেই) |
+| Device Tested | না |
+
+**Batch 1-এর নকশা-সিদ্ধান্ত:**
+- UI `:app`-এর `ui/` প্যাকেজে রাখা হয়েছে (আলাদা `:feature:*` মডিউল নয়), যাতে Gradle ত্রুটির ক্ষেত্র কমে। পরে সরানো যাবে।
+- Contacts ও Call log শুধু পড়া হয় (`READ_CONTACTS`, `READ_CALL_LOG`)। `WRITE_*` অনুমতি এখনো নেই, তাই contact সম্পাদনা, তারকা বদল ও call log মোছা নেই। Favorites = সিস্টেম Contacts-এ তারকা দেওয়া কন্টাক্ট।
+- T9 শুধু ইংরেজি (Latin) অক্ষরে। বাংলা নাম T9-তে মেলে না; নম্বর দিয়ে ও Contacts স্ক্রিনের টেক্সট সার্চে মেলে।
+- Dialpad: portrait-প্রথম; কী-সাউন্ড ও ভাইব্রেশন নেই (Phase 7); টাইপের সময় নম্বর যেমন, তালিকায় ফরম্যাট করা।
+- দুই SIM ও সিস্টেমে ডিফল্ট কলের SIM সেট না থাকলে DialMe নিজে SIM বাছাইয়ের ডায়ালগ দেখায়।
+- Dependency: DataStore 1.2.0 ও `hilt-navigation-compose` 1.3.0 (যাচাই: developer.android.com-এর release পাতা; CI-তে resolve হয়নি)।
+- থিম এখন DataStore-এ সংরক্ষিত (আগে শুধু মেমরিতে)। Settings-এর নোটের লেখা সেভাবে বদলেছে।
+
+**Batch 1 পরীক্ষার তালিকা (ডিভাইসে, পরে):** কন্টাক্ট অনুমতি দিলে তালিকা আসে; সার্চ (নাম ও নম্বর); Favorites-এ তারকা দেওয়া কন্টাক্ট; কল ইতিহাস অনুমতি ও তালিকা, Missed ফিল্টার; Dialpad-এ নম্বর, T9 পরামর্শ, পেস্ট, দীর্ঘ চাপে `0`→`+` ও মুছুন→সব মোছা; Dialpad থেকে কল (দুই SIM-এ SIM বাছাই); থিম বদলে অ্যাপ বন্ধ করে খুললে থিম থাকে; `tel:` লিংক থেকে Dialpad-এ নম্বর বসে।
+
 ## ১১. পরবর্তী কাজ
 
-1. `.github/workflows/ci.yml` হাতে বসানো (REPLACE)। তারপর পরের run-এর পাতা পড়ে Lint ত্রুটির কারণ ও unit test সংখ্যা নিশ্চিত করা (Claude নিজে দেখবে)।
-2. Device B ছাড়া Device A-তে যা করা যায় (মালিক সুবিধামতো): C4–C6; T2 ধাপ ৩–৫ (Cancel/Deny, restart; আগে Google Dialer default করে নিতে হবে); T11 ধাপ ১ (বর্তমান সেটিং লেখা); T12 (CALL_PHONE ও READ_PHONE_STATE বন্ধ করে কল করার চেষ্টা)।
-3. Device B হাতে এলে একসাথে: T4 এবং T5 (চারটি SIM সমন্বয়), T6–T10, T11-এর বাকি, T13। T14 ঐচ্ছিক (তৃতীয় ফোন)।
-4. Phase 1B-র পরীক্ষা শেষ ও মালিক অনুমোদন না করা পর্যন্ত Phase 2 শুরু হবে না।
+1. মালিক: আগে `.github/workflows/ci.yml` (Annotation-সংস্করণ) বসান, তারপর `inbox-batch1-core-data-main-ui.zip` আপলোড করে `inbox-unzip.yml` চালান।
+2. Claude: নতুন CI run-এর Annotations পড়ে compile ত্রুটি ঠিক করা; সবুজ না হওয়া পর্যন্ত Batch 1 "Build Verified" নয়।
+3. Batch 1 সবুজ হলে Batch 2। Lint ত্রুটির কারণ Annotation থেকে পড়া।
+4. Device B হাতে এলে Phase 1B-র T4–T15 একসাথে।

@@ -4,6 +4,22 @@
 
 ## [Unreleased]
 
+### 2026-11-26 — Batch 1: ডেটা স্তর ও প্রধান স্ক্রিন (CI-তে এখনো চলেনি)
+
+- মালিকের সিদ্ধান্ত: পুরো অ্যাপ বানিয়ে একসাথে পরীক্ষা। Batch পদ্ধতিতে কাজ; পরিকল্পনা ও ঝুঁকি `PROJECT_STATUS.md` ধারা ১০ক-তে।
+- নতুন মডিউল `:core:data`: Contacts ও Call log পড়া (read only), T9 ও সার্চ, কল-গ্রুপিং, DataStore-এ থিম সংরক্ষণ (`DataStoreThemeRepository`)।
+- `:app`: DialpadScreen (T9 পরামর্শ, পেস্ট, দীর্ঘ চাপ, দুই SIM-এ SIM বাছাই), ContactsScreen (সার্চ, বিস্তারিত), FavoritesScreen, RecentsScreen (Missed ফিল্টার, বিস্তারিত)। `tel:` লিংক এখন Dialpad-এ নম্বর বসায়।
+- নতুন dependency: DataStore 1.2.0, `hilt-navigation-compose` 1.3.0।
+- নতুন অনুমতি: `READ_CONTACTS`, `READ_CALL_LOG` (শুধু পড়া)।
+- ১৮টি নতুন unit test; স্থানীয়ভাবে নকল JUnit রানারে পাস (CI-র প্রমাণ নয়)। `ContactsQuery` ও `CallLogQuery` `android-36.jar`-এর বিরুদ্ধে স্থানীয়ভাবে কম্পাইল হয়েছে।
+- Build Verified: **না**। Device Tested: **না**।
+
+### 2026-11-25 — CI Run 8 ও 9 এবং Annotation-সংস্করণ
+
+- যাচাই (GitHub-এর পাবলিক run পাতা): diagnostic `ci.yml` `main`-এ বসেছে। Run 8 (commit `37897f7`, 1m 26s) ও Run 9 (commit `ee40cc3`, ম্যানুয়াল, 49s) সফল; artifact `DialMe-debug-8`, `reports-8`, `DialMe-debug-9`, `reports-9`।
+- দুটি run-এ Annotations: 1 error ("Process completed with exit code 1", Lint ধাপ) ও 2 warning (Node.js 20 deprecation, setup-java v4 deprecation)। Job summary-র লেখা স্ট্যাটিক পাতায় আসে না, তাই Lint ত্রুটির কারণ ও unit test সংখ্যা এখনো দেখা যায়নি।
+- নতুন `ci.yml` তৈরি: summary স্ক্রিপ্ট Lint Error, ব্যর্থ ধাপের মূল লাইন ও মডিউলভিত্তিক unit test সংখ্যা Annotation হিসেবেও পাঠায়। স্থানীয়ভাবে নকল ডেটায় পরীক্ষিত; **CI-তে এখনো চলেনি**; অ্যাপের কোড বদলায়নি।
+
 ### 2026-11-25 — CI diagnostic `ci.yml` (বসানো বাকি)
 
 - Run 7-এর log লগইন ছাড়া পড়া যায় না (HTTP 404), তাই Lint ত্রুটির কারণ এখনো অজানা।

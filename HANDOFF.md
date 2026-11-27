@@ -15,6 +15,7 @@
 1. Foundation বাস্তবে build যাচাই, তারপর রিপোর্ট। **সম্পন্ন।**
 2. তারপর Phase 1B Telecom Spike। **কোড লেখা হয়েছে, CI Run 7 সফল ও APK তৈরি (প্রমাণ: run পাতা)। ডিভাইস পরীক্ষা বাকি।**
 3. কোনো পরীক্ষার ফল অনুমান করে Passed করা যাবে না।
+4. (2026-11-26) মালিক: পুরো অ্যাপ বানিয়ে একসাথে পরীক্ষা করতে চান; বাকি কাজ শুরু করতে বলেছেন। কাজ Batch-এ চলছে; প্রতিটি Batch-এর পর CI যাচাই। পরিকল্পনা, ঝুঁকি ও Batch 1-এর অবস্থা `PROJECT_STATUS.md` ধারা ১০ক-তে। Dialme.md ধারা ১০.৫ মালিকের অনুমোদনে শিথিল।
 4. Phase 1B-র ফল ঘোষণার আগে ডিভাইস পরীক্ষা (Device A ও Device B) বাস্তবে হতে হবে।
 
 ## ৩. মালিকের কাজের পরিবেশ
@@ -73,8 +74,8 @@ AndroidX ও Compose BOM-এর সংস্করণ প্রথম build-এ 
 
 ## ৯. পরবর্তী কাজ (এই ক্রমে)
 
-1. `.github/workflows/ci.yml` হাতে বসানো (REPLACE; ZIP দিয়ে হয় না)। এতে "Job summary" ধাপ আছে। পরের run-এর পাতায় Lint ত্রুটি, ব্যর্থ ধাপের মূল লাইন ও unit test সংখ্যা দেখা যাবে; Claude নিজে `github.com`-এর পাবলিক পাতা থেকে পড়বে। স্ক্রিপ্ট CI-তে এখনো চলেনি। নিশ্চিত না হওয়া পর্যন্ত Lint-এর কারণ **অজানা**।
-   - কোড পড়ে পাওয়া **অযাচাইকৃত** সূত্র (প্রমাণ নেই): (ক) `abortOnError = false` শুধু `:app`-এ আছে, `:core:telecom` ও `:feature:incall`-এ নেই; (খ) `SimAccountProvider`-এর `getActiveSubscriptionInfo` কল `catch (e: Exception)`-এর ভেতরে; (গ) `CallNotifier`-এ `nm.notify(...)`-এর আগে সরাসরি permission যাচাই নেই। কারণ নিশ্চিত হওয়ার আগে কোড বদলানো হবে না।
-2. Device B ছাড়া Device A-তে করা যায় (মালিক সুবিধামতো): C4–C6; T2 ধাপ ৩–৫; T11 ধাপ ১; T12। প্রতিটিতে যা দেখলেন ও শুনলেন তা লিখুন।
-3. Device B হাতে এলে একসাথে: T4, T5, T6–T10, T11-এর বাকি, T13। (মালিক জানিয়েছেন T4 এখন দেখবেন না, পরে একসাথে।)
-4. Phase 1B-র পরীক্ষা শেষ ও মালিক অনুমোদন না করা পর্যন্ত Phase 2 শুরু হবে না।
+1. মালিক: `.github/workflows/ci.yml` (Annotation-সংস্করণ) বসান (ZIP দিয়ে হয় না), তারপর `inbox-batch1-core-data-main-ui.zip` আপলোড ও `inbox-unzip.yml` চালান।
+2. Claude: CI run-এর পাবলিক পাতার Annotations পড়ে Batch 1-এর compile ত্রুটি ঠিক করা। সবুজ না হওয়া পর্যন্ত Build Verified লেখা যাবে না।
+3. Lint ত্রুটির আসল কারণ এখনো **অজানা**; Annotation-সংস্করণ চললে পড়া যাবে। অযাচাইকৃত সূত্র (প্রমাণ নেই): (ক) `abortOnError = false` শুধু `:app`-এ আছে; (খ) `SimAccountProvider`-এ `getActiveSubscriptionInfo` কল `catch (e: Exception)`-এর ভেতরে; (গ) `CallNotifier`-এ `nm.notify(...)`-এর আগে সরাসরি permission যাচাই নেই।
+4. Batch 1 সবুজ হলে Batch 2 (পরিকল্পনা `PROJECT_STATUS.md` ধারা ১০ক)।
+5. Device B হাতে এলে Phase 1B-র T4–T15 একসাথে। Device B ছাড়াও পারা যায়: C4–C6, T2 ধাপ ৩–৫, T11 ধাপ ১, T12।

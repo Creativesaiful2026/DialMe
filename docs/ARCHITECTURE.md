@@ -4,7 +4,7 @@
 
 ## স্তর
 
-Compose UI → ViewModel (`StateFlow`) → Repository interface (`:core:model`) → implementation (`:app`-এ এখন in-memory)।
+Compose UI → ViewModel (`StateFlow`) → Repository interface (`:core:model`) → implementation (`:core:data`)।
 
 ## Module
 
@@ -15,15 +15,16 @@ Compose UI → ViewModel (`StateFlow`) → Repository interface (`:core:model`) 
 | `:core:common` | `DialMeLog`, `RotatingLogFile`, `CrashHandler` |
 | `:core:designsystem` | `DialMeTheme`, colour scheme, shapes, typography scaling, spacing |
 | `:core:telecom` | (Phase 1B) `InCallService`, `CallManager`, call placing, SIM list, default dialer role, notification |
+| `:core:data` | (Batch 1) Contacts ও Call log পড়া (read only), T9 ও সার্চ, কল-গ্রুপিং, `DataStoreThemeRepository` |
 | `:feature:incall` | (Phase 1B) `InCallActivity` ও সাদামাটা call স্ক্রিন |
 
-পরের ধাপে যোগ হবে: `:core:data` (Phase 2), বাকি `:feature:*` (Phase 2 থেকে)।
+প্রধান স্ক্রিন (Dialpad, Contacts, Favorites, Recents) এখন `:app`-এর `ui/` প্যাকেজে আছে। আলাদা `:feature:*` মডিউলে সরানো পরে, দরকার হলে।
 
 নির্ভরতার নিয়ম: feature → core; feature থেকে feature নয়; `:app` সব জোড়া লাগায়।
 
 ## Theme system
 
-`ThemeSpec` একটি serializable data class। রঙ, আকৃতি, spacing, font scale, animation speed, button shape তাতে থাকে। `ThemeCodec` JSON পড়া ও লেখার সময় সব মান সীমার মধ্যে আনে (`sanitized()`), তাই আমদানি করা ফাইল UI ভাঙতে পারে না। `DialMeTheme` তা Material 3 theme ও `CompositionLocal`-এ রূপান্তর করে। স্থায়ী সংরক্ষণ Phase 7-এ।
+`ThemeSpec` একটি serializable data class। রঙ, আকৃতি, spacing, font scale, animation speed, button shape তাতে থাকে। `ThemeCodec` JSON পড়া ও লেখার সময় সব মান সীমার মধ্যে আনে (`sanitized()`), তাই আমদানি করা ফাইল UI ভাঙতে পারে না। `DialMeTheme` তা Material 3 theme ও `CompositionLocal`-এ রূপান্তর করে। থিম এখন `DataStoreThemeRepository`-তে সংরক্ষিত (Batch 1; CI-তে এখনো চলেনি)।
 
 ## Diagnostics
 

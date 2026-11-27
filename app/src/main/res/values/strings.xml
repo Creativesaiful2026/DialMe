@@ -24,7 +24,7 @@
     <string name="settings_corner_radius">Corner radius</string>
     <string name="settings_preview_card">This card follows your chosen corner radius.</string>
     <string name="settings_reset_theme">Reset to default</string>
-    <string name="settings_not_saved">These settings last only while the app is open. Permanent saving arrives in Phase 7.</string>
+    <string name="settings_not_saved">Theme settings are saved on this device.</string>
     <string name="settings_section_diagnostics">Diagnostics</string>
     <string name="settings_open_log">View app log</string>
     <string name="settings_section_about">About</string>
@@ -70,4 +70,44 @@
     <string name="telecom_result_invalid">That is not a valid number.</string>
     <string name="telecom_result_no_permission">Permission to make calls is missing.</string>
     <string name="telecom_result_error">The call could not be started.</string>
+
+    <string name="permission_grant">Allow</string>
+    <string name="permission_denied_hint">If no permission dialog appears, open Settings, Apps, DialMe, Permissions.</string>
+    <string name="permission_contacts_message">DialMe needs permission to read your contacts to show names, favorites and suggestions.</string>
+    <string name="permission_call_log_message">DialMe needs permission to read your call history to show recent calls.</string>
+
+    <string name="contacts_search_label">Search name or number</string>
+    <string name="contacts_empty">No contacts with a phone number were found.</string>
+    <string name="contacts_no_match">No contact matches your search.</string>
+    <string name="favorites_empty">No favorites yet. Star a contact in your Contacts app and it will appear here.</string>
+    <string name="contact_favorite_label">Favorite</string>
+    <string name="contact_call">Call</string>
+    <string name="contact_message">Message</string>
+    <string name="contact_close">Close</string>
+
+    <string name="dialpad_hint">Enter a number</string>
+    <string name="dialpad_paste">Paste number</string>
+    <string name="dialpad_backspace">Delete</string>
+    <string name="dialpad_call">Call</string>
+    <string name="dialpad_allow_contacts">Allow contacts to see suggestions</string>
+    <string name="dialpad_clipboard_invalid">The clipboard does not contain a phone number.</string>
+
+    <string name="call_choose_sim">Call with which SIM?</string>
+    <string name="sim_item">SIM %1$d: %2$s</string>
+    <string name="call_error_invalid">That is not a valid number.</string>
+    <string name="call_error_permission">Permission to make calls is missing.</string>
+    <string name="call_error_failed">The call could not be started.</string>
+
+    <string name="recents_filter_all">All</string>
+    <string name="recents_filter_missed">Missed</string>
+    <string name="recents_empty">No calls yet.</string>
+    <string name="recents_empty_missed">No missed calls.</string>
+    <string name="recents_unknown_number">Unknown</string>
+    <string name="call_type_incoming">Incoming</string>
+    <string name="call_type_outgoing">Outgoing</string>
+    <string name="call_type_missed">Missed</string>
+    <string name="call_type_rejected">Rejected</string>
+    <string name="call_type_blocked">Blocked</string>
+    <string name="call_type_voicemail">Voicemail</string>
+    <string name="call_type_other">Other</string>
 </resources>

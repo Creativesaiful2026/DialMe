@@ -25,6 +25,8 @@
 | androidx.lifecycle (runtime-compose) | 2.9.4 | build-এ resolve হয়েছে |
 | androidx.navigation:navigation-compose | 2.9.4 | build-এ resolve হয়েছে |
 | JUnit | 4.13.2 | — |
+| androidx.datastore:datastore-preferences | 1.2.0 | developer.android.com-এর release পাতায় stable (2025-11-19)। CI-তে resolve হয়নি। নোট: 1.3.0 stable (2026-10-21) আছে, কিন্তু নতুন lifecycle টেনে আনতে পারে বলে রক্ষণশীলভাবে 1.2.0 |
+| androidx.hilt:hilt-navigation-compose | 1.3.0 | release পাতায় stable (2025-09-10; Kotlin 2.0 ও KSP2 সমর্থন)। CI-তে resolve হয়নি |
 
 Claude-এর পরিবেশ Google-এর Maven repository-তে পৌঁছাতে পারে না, তাই এই সংস্করণগুলো আগে যাচাই করা যায়নি। এখন Actions build সফল হওয়ায় সেটি নিশ্চিত।
 
@@ -32,5 +34,4 @@ Claude-এর পরিবেশ Google-এর Maven repository-তে পৌঁ
 
 - `androidx.core.telecom` (VoIP অ্যাপের জন্য)।
 - Analytics, crash-reporting ও বিজ্ঞাপন library।
-- `hilt-navigation-compose` (Phase 1-এ দরকার নেই)।
-- Room, DataStore, WorkManager (Phase 2 ও পরে)।
+- Room, WorkManager (পরের Batch-এ, দরকার হলে)।

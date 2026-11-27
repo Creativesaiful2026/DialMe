@@ -16,13 +16,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.saiful.dialme.R
 import com.saiful.dialme.core.model.theme.ThemeSpec
+import com.saiful.dialme.ui.contacts.ContactsScreen
+import com.saiful.dialme.ui.contacts.FavoritesScreen
+import com.saiful.dialme.ui.dialpad.DialpadScreen
 import com.saiful.dialme.ui.navigation.ROUTE_DIAGNOSTICS
 import com.saiful.dialme.ui.navigation.ROUTE_TELECOM_SPIKE
 import com.saiful.dialme.ui.navigation.TopLevelDestination
+import com.saiful.dialme.ui.recents.RecentsScreen
 import com.saiful.dialme.ui.screens.DiagnosticsScreen
-import com.saiful.dialme.ui.screens.PlaceholderScreen
 import com.saiful.dialme.ui.screens.SettingsScreen
 import com.saiful.dialme.ui.screens.TelecomSpikeScreen
 
@@ -38,10 +40,14 @@ fun DialMeApp(
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = TopLevelDestination.entries.any { it.route == currentRoute }
 
-    // A tel: link or DIAL intent from another app opens the Telecom spike screen with the number.
+    // A tel: link or DIAL intent from another app opens the Dialpad with the number filled in.
     LaunchedEffect(dialRequest) {
         if (dialRequest != null) {
-            navController.navigate(ROUTE_TELECOM_SPIKE) { launchSingleTop = true }
+            navController.navigate(TopLevelDestination.DIALPAD.route) {
+                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
         }
     }
 
@@ -74,18 +80,10 @@ fun DialMeApp(
             startDestination = TopLevelDestination.DIALPAD.route,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable(TopLevelDestination.FAVORITES.route) {
-                PlaceholderScreen(titleRes = R.string.nav_favorites, plannedPhase = 4)
-            }
-            composable(TopLevelDestination.CONTACTS.route) {
-                PlaceholderScreen(titleRes = R.string.nav_contacts, plannedPhase = 4)
-            }
-            composable(TopLevelDestination.RECENTS.route) {
-                PlaceholderScreen(titleRes = R.string.nav_recents, plannedPhase = 4)
-            }
-            composable(TopLevelDestination.DIALPAD.route) {
-                PlaceholderScreen(titleRes = R.string.nav_dialpad, plannedPhase = 3)
-            }
+            composable(TopLevelDestination.FAVORITES.route) { FavoritesScreen() }
+            composable(TopLevelDestination.CONTACTS.route) { ContactsScreen() }
+            composable(TopLevelDestination.RECENTS.route) { RecentsScreen() }
+            composable(TopLevelDestination.DIALPAD.route) { DialpadScreen(dialRequest = dialRequest) }
             composable(TopLevelDestination.SETTINGS.route) {
                 SettingsScreen(
                     themeSpec = themeSpec,
@@ -100,7 +98,7 @@ fun DialMeApp(
             }
             composable(ROUTE_TELECOM_SPIKE) {
                 TelecomSpikeScreen(
-                    initialNumber = dialRequest?.number,
+                    initialNumber = null,
                     onBack = { navController.popBackStack() },
                 )
             }

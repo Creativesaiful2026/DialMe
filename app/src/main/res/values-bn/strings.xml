@@ -24,7 +24,7 @@
     <string name="settings_corner_radius">কোণের গোলাকার ভাব</string>
     <string name="settings_preview_card">এই কার্ড আপনার বেছে নেওয়া কোণের মাপ অনুসরণ করে।</string>
     <string name="settings_reset_theme">ডিফল্টে ফেরান</string>
-    <string name="settings_not_saved">এই সেটিং শুধু অ্যাপ খোলা থাকা পর্যন্ত থাকে। স্থায়ীভাবে সংরক্ষণ Phase 7-এ আসবে।</string>
+    <string name="settings_not_saved">থিমের সেটিং এই ডিভাইসে সংরক্ষিত থাকে।</string>
     <string name="settings_section_diagnostics">ডায়াগনস্টিক্স</string>
     <string name="settings_open_log">অ্যাপের লগ দেখুন</string>
     <string name="settings_section_about">সম্পর্কে</string>
@@ -70,4 +70,44 @@
     <string name="telecom_result_invalid">এটি সঠিক নম্বর নয়।</string>
     <string name="telecom_result_no_permission">কল করার অনুমতি নেই।</string>
     <string name="telecom_result_error">কল শুরু করা যায়নি।</string>
+
+    <string name="permission_grant">অনুমতি দিন</string>
+    <string name="permission_denied_hint">অনুমতির ডায়ালগ না এলে Settings, Apps, DialMe, Permissions-এ যান।</string>
+    <string name="permission_contacts_message">নাম, প্রিয় তালিকা ও পরামর্শ দেখাতে DialMe-র আপনার কন্টাক্ট পড়ার অনুমতি লাগবে।</string>
+    <string name="permission_call_log_message">সাম্প্রতিক কল দেখাতে DialMe-র আপনার কল ইতিহাস পড়ার অনুমতি লাগবে।</string>
+
+    <string name="contacts_search_label">নাম বা নম্বর খুঁজুন</string>
+    <string name="contacts_empty">ফোন নম্বরসহ কোনো কন্টাক্ট পাওয়া যায়নি।</string>
+    <string name="contacts_no_match">আপনার খোঁজের সাথে কোনো কন্টাক্ট মেলেনি।</string>
+    <string name="favorites_empty">এখনো কোনো প্রিয় কন্টাক্ট নেই। কন্টাক্ট অ্যাপে তারকা চিহ্ন দিলে এখানে দেখা যাবে।</string>
+    <string name="contact_favorite_label">প্রিয়</string>
+    <string name="contact_call">কল</string>
+    <string name="contact_message">বার্তা</string>
+    <string name="contact_close">বন্ধ করুন</string>
+
+    <string name="dialpad_hint">নম্বর লিখুন</string>
+    <string name="dialpad_paste">নম্বর পেস্ট করুন</string>
+    <string name="dialpad_backspace">মুছুন</string>
+    <string name="dialpad_call">কল</string>
+    <string name="dialpad_allow_contacts">পরামর্শ দেখতে কন্টাক্টের অনুমতি দিন</string>
+    <string name="dialpad_clipboard_invalid">ক্লিপবোর্ডে কোনো ফোন নম্বর নেই।</string>
+
+    <string name="call_choose_sim">কোন SIM দিয়ে কল করবেন?</string>
+    <string name="sim_item">SIM %1$d: %2$s</string>
+    <string name="call_error_invalid">এটি সঠিক নম্বর নয়।</string>
+    <string name="call_error_permission">কল করার অনুমতি নেই।</string>
+    <string name="call_error_failed">কল শুরু করা যায়নি।</string>
+
+    <string name="recents_filter_all">সব</string>
+    <string name="recents_filter_missed">মিসড</string>
+    <string name="recents_empty">এখনো কোনো কল নেই।</string>
+    <string name="recents_empty_missed">কোনো মিসড কল নেই।</string>
+    <string name="recents_unknown_number">অজানা</string>
+    <string name="call_type_incoming">ইনকামিং</string>
+    <string name="call_type_outgoing">আউটগোইং</string>
+    <string name="call_type_missed">মিসড</string>
+    <string name="call_type_rejected">প্রত্যাখ্যাত</string>
+    <string name="call_type_blocked">ব্লক করা</string>
+    <string name="call_type_voicemail">ভয়েসমেইল</string>
+    <string name="call_type_other">অন্যান্য</string>
 </resources>
