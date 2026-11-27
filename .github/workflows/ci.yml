@@ -96,6 +96,20 @@ jobs:
           def add(s=""):
               out.append(s)
 
+          ann_counts = collections.Counter()
+
+          def esc_data(s):
+              return s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+          def esc_prop(s):
+              return esc_data(s).replace(":", "%3A").replace(",", "%2C")
+
+          def ann(level, title, message, limit=10):
+              if ann_counts[level] >= limit:
+                  return
+              ann_counts[level] += 1
+              print("::%s title=%s::%s" % (level, esc_prop(title), esc_data(message[:500])))
+
           def read_lines(path):
               try:
                   with open(path, encoding="utf-8", errors="replace") as f:
@@ -142,6 +156,8 @@ jobs:
                   if not lines:
                       lines = [l[:400] for l in read_lines(log)[-40:]]
                   out.extend(lines)
+                  for line in lines[:6]:
+                      ann("error", "%s log" % label, line)
                   add("```")
                   add("")
 
@@ -161,6 +177,7 @@ jobs:
                   add("- `%s`: %s" % (path, ", ".join("%s=%d" % kv for kv in sorted(counts.items()))))
               else:
                   add("- `%s`: no issues" % path)
+              ann("notice", "Lint report", "%s: %s" % (path, ", ".join("%s=%d" % kv for kv in sorted(counts.items())) or "no issues"))
               shown = 0
               for issue in issues:
                   if issue.get("severity") in ("Error", "Fatal") and shown < 40:
@@ -171,6 +188,7 @@ jobs:
                       add("  - [%s] `%s` %s (%s)" % (
                           issue.get("severity"), issue.get("id"),
                           (issue.get("message") or "")[:300].replace("\n", " "), where))
+                      ann("error", "Lint %s" % issue.get("id"), "%s (%s)" % ((issue.get("message") or "")[:300], where))
                       shown += 1
               warn = collections.Counter(i.get("id", "?") for i in issues if i.get("severity") == "Warning")
               if warn:
@@ -202,6 +220,10 @@ jobs:
               for module, m in per_module.items():
                   add("| %s | %d | %d | %d | %d |" % (module, m[0], m[1], m[2], m[3]))
               add("| **Total** | %d | %d | %d | %d |" % tuple(sum(m[k] for m in per_module.values()) for k in range(4)))
+          for module, m in per_module.items():
+              ann("notice", "Unit tests", "%s: tests=%d failures=%d errors=%d skipped=%d" % (module, m[0], m[1], m[2], m[3]))
+          for name in failed[:10]:
+              ann("error", "Unit test failed", name)
           for name in failed[:30]:
               add("- FAILED: `%s`" % name)
 
